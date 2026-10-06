@@ -1,0 +1,96 @@
+.edit-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    height: 200px;
+}
+.align-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+}
+.address-form {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+}
+.address-form-container {
+    border: 1px solid rgba(143, 143, 143, 0.662);
+    border-radius: 15px;
+    width: 590px;
+    background-color: white;
+    height: 360px;
+}
+.user-info-container,
+.account-setting-container {
+    border: 1px solid rgba(143, 143, 143, 0.662);
+    border-radius: 15px;
+    width: 590px;
+    background-color: white;
+    height: 300px;
+    margin-bottom: 20px;
+}
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(143, 143, 143, 0.3);
+}
+.card-header h3 {
+    font-size: 1em;
+    color: #333;
+}
+.card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.form-row {
+    margin-top: 10px;
+    display: flex;
+    gap: 15px;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+}
+.form-group label {
+    font-size: 0.8em;
+    color: rgba(118, 110, 110, 0.9);
+}
+.form-group input {
+    padding: 10px;
+    border: 1px solid rgba(143, 143, 143, 0.4);
+    border-radius: 8px;
+    font-size: 0.9em;
+    outline: none;
+    background-color: white;
+}
+.form-group input:focus {
+    border-color: #024ea0;
+    box-shadow: 0 0 0 2px rgba(2, 78, 160, 0.15);
+}
+.savebtn {
+    margin-top: 30px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: rgb(51, 186, 101);
+    color: white;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+.savebtn:hover {
+    background-color: rgb(39, 160, 84);
+}

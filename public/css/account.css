@@ -1,0 +1,128 @@
+.account-container {
+    flex: 1 0 auto;
+    display: flex;
+}
+.account-sidebar {
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    min-height: 15rem;
+    max-height: 20rem;
+    width: 250px;
+}
+.account-links a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    width: 100%;
+}
+.sidebar-text {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    width: 230px;
+    color: black;
+    font-size: 1em;
+}
+.sidebar-text p {
+    margin-left: 15px;
+}
+.user-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+.card-containers {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+.userinfo-card {
+    border: 1px solid rgba(143, 143, 143, 0.662);
+    border-radius: 15px;
+    height: 250px;
+    width: 350px;
+    background-color: white;
+}
+.address-card {
+    border: 1px solid rgba(143, 143, 143, 0.662);
+    border-radius: 15px;
+    height: 250px;
+    width: 350px;
+    background-color: white;
+}
+.user-header-text {
+    font-size: 1.2em;
+    margin: 15px;
+}
+.info-text {
+    margin: 15px;
+}
+.Fname {
+    font-size: 1.2em;
+}
+.info-text p {
+    margin: 0 15px 15px 0;
+    font-size: 1em;
+}
+.order-table-container {
+    width: 95%; 
+    max-width: 100%; 
+    background-color: white;
+    border: 1px solid rgba(143, 143, 143, 0.662);
+    border-radius: 15px;
+    overflow: hidden;
+}
+.my_orders_header {
+    border-bottom: 1px solid rgba(143, 143, 143, 0.3);
+}
+.my-orders-header h3 {
+    padding: 15px 20px;
+    font-size: 1.2em;
+    color: #333;
+}
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.order-table th {
+    background-color: #d5d5d5;
+    padding: 16px 20px;
+    font-size: 0.95rem;
+    text-align: left;
+    font-weight: 600;
+}
+.order-table td {
+    padding: 16px 20px;
+    font-size: 0.95rem;
+    font-weight: 400;
+}
+.order-table tbody tr:nth-of-type(odd) {
+    background-color: #f3f3f3;
+}
+.order-table tbody tr:nth-of-type(even) {
+    background-color: #e8e8e8;
+}
+.signout {
+    margin-left: 15px;
+    border-radius: 10px;
+    padding: 5px 10px;
+    width: 210px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+}
+.signout:hover {
+    background-color: #d62929;
+}
+#signbutton {
+    background-color: #f6f6f6;
+    border: none;
+    width: 210px;
+}

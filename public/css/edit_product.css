@@ -1,0 +1,13 @@
+.edit-form-container {
+    margin: 20px;
+    background-color: white;
+    border: 1px solid rgba(143, 143, 143, 0.4);
+    border-radius: 15px;
+    padding: 25px;
+    max-width: 1200px;
+}
+.form-buttons a{
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+}

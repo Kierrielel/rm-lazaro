@@ -1,0 +1,100 @@
+.setting-card-container {
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
+}
+.align-container {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+.store-info-container,
+.account-setting-container {
+    border: 1px solid rgba(143, 143, 143, 0.662);
+    border-radius: 15px;
+    width: 590px;
+    background-color: white;
+}
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(143, 143, 143, 0.3);
+}
+.card-header h3 {
+    font-size: 1em;
+    color: #333;
+}
+.card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+}
+.form-group label {
+    font-size: 0.8em;
+    color: rgba(118, 110, 110, 0.9);
+}
+.form-group input {
+    padding: 10px;
+    border: 1px solid rgba(143, 143, 143, 0.4);
+    border-radius: 8px;
+    font-size: 0.9em;
+    outline: none;
+    background-color: white;
+}
+.form-group input:focus {
+    border-color: #024ea0;
+    box-shadow: 0 0 0 2px rgba(2, 78, 160, 0.15);
+}
+.form-group input:disabled {
+    background-color: #f0f0f0;
+    color: #999;
+    cursor: not-allowed;
+}
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 10px 15px;
+    font-size: 0.9em;
+}
+.alert-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 10px 15px;
+    font-size: 0.9em;
+}
+.signout{
+    background-color: #f6f6f6;
+    border-radius: 10px;
+    padding: 5px 10px;
+    width: 210px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+}
+.signout:hover {
+    background-color: #d62929;
+}
+#signbutton{
+    border: none;
+    width: 210px;   
+}

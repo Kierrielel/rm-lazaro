@@ -1,0 +1,14 @@
+.categories-content {
+    flex: 1;
+    background-color: #f6f6f6;
+    overflow-y: auto;
+    min-height: 0;
+}
+.popupBox-categories {
+    display: flex;
+    flex-direction: column;
+    height: 350px;
+    width: 600px;
+    background: #ffff;
+    border-radius: 22px;
+}

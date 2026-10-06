@@ -1,0 +1,73 @@
+.orders-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    min-height: 0;
+}
+.obottom-con {
+    margin-top: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.box-bottom {
+    width: 90%; 
+    max-width: 95%; 
+    background-color: white;
+    border: 1px solid rgba(143, 143, 143, 0.662);
+    border-radius: 15px;
+    overflow: hidden;
+}
+.box-bottom-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(143, 143, 143, 0.3);
+}
+.box-bottom-header h3 {
+    font-size: 1.2em;
+    color: #333;
+}
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.order-table th {
+    background-color: #d5d5d5;
+    padding: 16px 20px;
+    font-size: 0.95rem;
+    text-align: left;
+    font-weight: 600;
+}
+.order-table td {
+    padding: 16px 20px;
+    font-size: 0.95rem;
+    font-weight: 400;
+}
+.order-table tbody tr:nth-of-type(odd) {
+    background-color: #f3f3f3;
+}
+.order-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 30px;
+    font-size: 0.8em;
+    font-weight: 500;
+}
+.status-completed {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+.status-pending {
+    background-color: #fef9c3;
+    color: #854d0e;
+}
+.status-cancelled {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+.status-processing {
+    background-color: #dbeafe;
+    color: #1e40af;
+}

@@ -1,0 +1,110 @@
+.product-container {
+    overflow-y: auto;
+    flex: 1 0 auto;
+    display: flex;
+}
+.sort-sidebar {
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+    background-color: white;
+    border-radius: 10px;
+    min-height: 35rem;
+    max-height: 62.5;
+    width: 300px;
+}
+.sort-sidebar h3 {
+    margin: 15px;   
+}
+.product-section {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+}
+.empty-product {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+    color: #888;
+    width: 100%;
+}
+.empty-product p {
+    font-size: 1.5em;
+}
+.product-grid-main {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.product-card-main {
+    background-color: white;
+    height: 320px;
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+}
+.img-con-main {
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.prod-text-main {
+    margin-left: 20px;
+    gap: 5px;
+    display: flex;
+    flex-direction: column;
+    height: 180px;
+}
+.prod-text-main h4 {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.prod-text-main p {
+    font-size: 1em;
+}
+.text-con-main {
+    height: 100px;
+}
+.prod-text-main #stock {
+    font-size: 1em;
+    color: rgb(162, 162, 162);
+    font-weight: lighter;
+}
+.prod-link {
+    color: black;
+    text-decoration: none;
+}
+.prod-link-con a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    width: 100%;
+}
+.brand-link-con a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    width: 100%;
+}
+.sidebar-text-links {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    width: 280px;
+    color: black;
+    font-size: 1em;
+}
+.sidebar-text-links p {
+    margin-left: 15px;
+}
+.sidebar-text-links:hover {
+    background-color: rgb(222, 222, 222);
+    border-radius: 7px;
+}

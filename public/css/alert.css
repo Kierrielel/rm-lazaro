@@ -1,0 +1,22 @@
+.alert-success {
+    text-align: center;
+    background-color: #d1fae5;
+    color: #065f46;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 10px 15px;
+    font-size: 0.9em;
+    width: 100%;
+    max-width: 1150px;
+}
+.alert-error {
+    text-align: center;
+    background-color: #fee2e2;
+    color: #991b1b;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 10px 15px;
+    font-size: 0.9em;
+    width: 100%;
+    max-width: 1150px;
+}

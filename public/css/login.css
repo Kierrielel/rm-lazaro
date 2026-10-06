@@ -1,0 +1,131 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+#logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+body {
+    background-image:
+        linear-gradient(to right, #7e8cf6, rgba(0, 0, 0, 0)),
+        url("../images/bg.png");
+    background-size: cover;
+    background-position: center;
+    padding: min(5em, 8%);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.login_container,
+.signup_container {
+    background: linear-gradient(135deg, #2b60ba, #15387b);
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.login_container h1,
+.signup_container h1 {
+    color: white;
+    text-align: center;
+    font-size: 1.7em;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.btn-signup,
+.btn-login {
+    background-color: #8c7e75;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+.btn-login:hover,
+.btn-signup:hover {
+    background-color: #736760;
+}
+
+.forgot-password {
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.8rem;
+    margin-top: -5px;
+}
+
+.btn-create {
+    background-color: #e4e4e4;
+    color: #333;
+    text-align: center;
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    margin-top: 20px;
+    font-weight: bold;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+.btn-create:hover {
+    background-color: #d0d0d0;
+}
+.input-container {
+    position: relative;
+}
+.input-container input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+.input-container label {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    color: #999;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 0 5px;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    font-size: 1rem;
+}
+.input-container input:focus + label,
+.input-container input:not(:placeholder-shown) + label {
+    top: -10px;
+    left: 10px;
+    font-size: 0.98rem;
+    color: #060d18;
+}
+.alert-container {
+    display: flex;
+    justify-items: center;
+    width: 500px;
+    max-width: 1200px;
+    position: fixed;
+    top: 10px;         
+    z-index: 1000px; 
+}

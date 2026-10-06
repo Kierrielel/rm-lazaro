@@ -1,0 +1,131 @@
+:root {
+    --color1: black;
+    --text-color: rgb(0, 0, 0);
+    --accent-color: #ffffff;
+}
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+.banner {
+    padding: 15px;
+    background-image: linear-gradient(135deg, #15387b, #2b60ba);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.banner-text {
+    font-weight: bold;
+    padding-left: 10px;
+}
+.text-1 {
+    color: white;
+    word-break: break-all;
+}
+.text-2 {
+    overflow-wrap: break-word;
+    color: orange;
+}
+.banner-2 {
+    background-image: linear-gradient(135deg, #4c5e83, #7d9cd2);
+}
+nav {
+    height: 45px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+nav a {
+    height: 100%;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 1em;
+}
+nav a:hover {
+    background-color: var(--accent-color);
+}
+nav .home-link .shop-link {
+    margin-right: auto;
+}
+.links-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.cart-link {
+    margin-left: auto;
+}
+.search-con {
+    margin-left: auto;
+    padding-right: 20px;
+}
+.search-bar {
+    --padding: 10px;
+
+    width: max-content;
+    display: flex;
+    align-items: center;
+    padding: var(--padding);
+    border-radius: 28px;
+    background-color: white;
+    transition: box-shadow 0.25s;
+}
+.search-bar:focus-within {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+}
+.search-input {
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+    color: black;
+    margin-left: var(--padding);
+    outline: none;
+    border: none;
+    background: transparent;
+}
+.search-input::placeholder,
+.search-icon {
+    color: rgba(0, 0, 0, 0.25);
+}
+#footer-container p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.7em;
+    color: rgba(128, 128, 128, 0.542);
+    height: 40px;
+}
+.store-info-section {
+    background-color: #15387b;
+    height: 100px;
+}
+.store-info-card {
+    gap: 5px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #15387b;
+}
+.store-info-card h3 {
+    font-size: 1em;
+    color: rgb(255, 255, 255);
+}
+.store-info-card p {
+    color: rgba(182, 182, 182, 0.542);
+    font-size: 0.8em;
+}
+.user-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.user-login p {
+    font-size: 0.7em;
+}
