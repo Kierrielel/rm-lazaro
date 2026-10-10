@@ -1,0 +1,156 @@
+
+.banner-images {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 24px 10px;
+}
+
+.banner-slider {
+    position: relative;
+    display: grid;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(15, 35, 85, 0.2);
+}
+
+.banner-slide {
+    grid-area: 1 / 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.8s;
+}
+
+.banner-slide.active {
+    opacity: 1;
+}
+
+.banner-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.85);
+    color: #15387b;
+    font-size: 1.1em;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s;
+}
+
+.banner-arrow:hover {
+    background-color: white;
+}
+
+.banner-prev {
+    left: 16px;
+}
+
+.banner-next {
+    right: 16px;
+}
+
+.banner-dots {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    gap: 8px;
+}
+
+.banner-dot {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(21, 56, 123, 0.35);
+    cursor: pointer;
+    transition: width 0.3s, background-color 0.3s;
+}
+
+.banner-dot.active {
+    width: 26px;
+    background-color: #15387b;
+}
+
+.products-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 24px 50px;
+}
+
+.products-section h2 {
+    margin-bottom: 26px;
+    font-size: 1.7em;
+    color: #15387b;
+}
+
+.products-section h2::after {
+    content: "";
+    display: block;
+    width: 45px;
+    height: 4px;
+    margin-top: 10px;
+    background-color: #ffb020;
+    border-radius: 4px;
+}
+
+.products-section .product-card p {
+    margin-top: auto;
+    padding: 14px 18px 18px;
+    color: #15387b;
+    font-size: 19px;
+    font-weight: bold;
+}
+
+
+/*Mobile */
+
+@media (max-width: 768px) {
+    .banner-images {
+        padding: 15px 15px 5px;
+    }
+
+    .banner-slider {
+        border-radius: 14px;
+    }
+
+    .banner-arrow {
+        width: 34px;
+        height: 34px;
+        font-size: 0.9em;
+    }
+
+    .banner-prev {
+        left: 8px;
+    }
+
+    .banner-next {
+        right: 8px;
+    }
+
+    .banner-dots {
+        bottom: 8px;
+    }
+
+    .products-section {
+        padding: 20px 15px 40px;
+    }
+
+    .products-section h2 {
+        font-size: 1.4em;
+    }
+
+    .products-section .product-card p {
+        padding: 10px 14px 14px;
+        font-size: 17px;
+    }
+}
