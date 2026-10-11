@@ -11,10 +11,7 @@ use Illuminate\Support\Facades\Hash;
 class RmLazaroSeeder extends Seeder
 {
     /**
-     * Ports the data that was in the original database.sql dump.
-     * Admin login after seeding: email test@gmail.com / password you set below
-     * (original argon2i hashes are not reused since the plaintext passwords
-     * aren't recoverable from them — reseed with known passwords instead).
+     * php artisan db:seed --class=RmLazaroSeeder
      */
     public function run(): void
     {
