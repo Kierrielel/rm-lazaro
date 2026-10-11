@@ -1,9 +1,11 @@
+
 .categories-content {
     flex: 1;
     background-color: #f6f6f6;
     overflow-y: auto;
     min-height: 0;
 }
+
 .popupBox-categories {
     display: flex;
     flex-direction: column;
@@ -11,4 +13,101 @@
     width: 600px;
     background: #ffff;
     border-radius: 22px;
+}
+
+.categories-page {
+    padding: 28px;
+}
+
+.categories-page h2 {
+    margin-bottom: 22px;
+    font-size: 1.6em;
+    color: #002a65;
+}
+
+.category-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 26px;
+    padding: 20px;
+    background: white;
+    border: 1px solid rgba(143, 143, 143, 0.35);
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.category-form input {
+    flex: 1 1 220px;
+    padding: 12px 18px;
+    background: #eef3fc;
+    border: 1px solid #d5e0f5;
+    border-radius: 30px;
+    outline: none;
+    font-size: 0.95rem;
+}
+
+.category-form input:focus {
+    background: white;
+    border-color: #2b60ba;
+    box-shadow: 0 0 0 3px rgba(43, 96, 186, 0.2);
+}
+
+.category-form button {
+    padding: 12px 28px;
+    background-image: linear-gradient(135deg, #2b60ba, #15387b);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.category-form button:hover {
+    background-image: none;
+    background-color: #15387b;
+}
+
+
+.categories-page .dashboard-table td:first-child {
+    font-weight: bold;
+    color: #1b2437;
+}
+
+.count-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #eef3fc;
+    border-radius: 30px;
+    color: #024ea0;
+    font-weight: bold;
+}
+
+.dashboard-table .delete-btn {
+    padding: 7px 16px;
+    background: white;
+    border: 1px solid #dc2626;
+    border-radius: 30px;
+    color: #dc2626;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.dashboard-table .delete-btn:hover {
+    background: #dc2626;
+    color: white;
+}
+
+
+@media (max-width: 560px) {
+    .categories-page {
+        padding: 16px;
+    }
+
+    .category-form button {
+        flex: 1 1 100%;
+    }
 }
