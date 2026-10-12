@@ -1,220 +1,181 @@
-.inventory-content {
-    flex: 1;
-    background-color: #f6f6f6;
-    overflow-y: auto;
-    min-height: 0;
-}
-.text-container {
-    margin-right: auto;
-}
-#addbtn {
-    text-decoration: none;
-}
-.addbtn {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-    padding: 10px;
-    cursor: pointer;
-    box-sizing: border-box;
-    background-color: rgb(52, 158, 91);
-    border-radius: 5px;
-}
-.addbtn p {
-    color: white;
-    font-weight: bold;
-    font-size: 1.2em;
-}
-.empty-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 400px;
-    color: #888;
-}
-.product-table-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.product-table-container table {
-    border-collapse: collapse;
-    width: 1200px;
-    margin: 25px 0;
-    text-align: left;
-}
-.product-table-container tr,
-.product-table-container td,
-.product-table-container th {
-    border: none;
-    text-align: left;
-}
-.product-table thead th {
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: #000000;
+.inventory-page {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.product-table tbody td {
-    font-weight: 400;
-    font-size: 0.85rem;
+/* Header */
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
 }
-.product-table {
-    border-radius: 5px 5px 0 0;
+.inventory-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #111;
+}
+.subtitle {
+    margin: 4px 0 0;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+}
+.btn-primary { background: #16a34a; color: white; }
+.btn-primary:hover { background: #15803d; }
+.btn-dark { background: #222; color: white; }
+.btn-dark:hover { background: #000; }
+.btn-light { background: #f1f1f1; color: #222; }
+.btn-light:hover { background: #e4e4e4; }
+.btn-danger { background: #fee2e2; color: #b91c1c; }
+.btn-danger:hover { background: #fecaca; }
+
+/* Search */
+.search-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.search-form input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    background: white;
+}
+.search-form input:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+}
+
+/* Table card */
+.table-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
     overflow: hidden;
 }
-.product-table thead {
-    background-color: #d5d5d5;
-    color: #000000;
-    text-align: left;
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
 }
-.product-table th,
+.product-table th {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #777;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+}
 .product-table td {
-    padding: 12px 15px;
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+.product-table tbody tr:last-child td { border-bottom: none; }
+.product-table tbody tr:hover { background: #fafafa; }
+
+/* Product cell */
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.product-info img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #eee;
+}
+.product-name {
+    font-weight: 600;
+    color: #111;
 }
 
-.product-table tbody tr {
-    background-color: #f3f3f3;
-}
-.action-buttons {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-#add-button {
-    background-color: #006400;
-    color: white;
-    padding: 14px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bolder;
-    text-decoration: none;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-.stocktext-admin {
-    color: #16a34a;
-    font-size: 0.85rem;
-    font-weight: 510;
-}
-#catcon {
-    background-color: #e4e4e4;
-    border-radius: 30px;
+/* Category + stock badges */
+.category-tag {
+    background: #f1f1f1;
     padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
     white-space: nowrap;
 }
-#price-text {
-    color: #626262;
+.stock {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
 }
-#prodname-text {
-    color: black;
-    font-weight: bold;
-}
-.PopupOverlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(169, 169, 169, 0.23);
-    backdrop-filter: blur(3px);
-    z-index: 999;
-    align-items: center;
-    justify-content: center;
-}
-.popupBox {
+.stock-ok  { background: #dcfce7; color: #15803d; }
+.stock-low { background: #fef3c7; color: #b45309; }
+.stock-out { background: #fee2e2; color: #b91c1c; }
+
+/* Actions */
+.actions-col { text-align: right !important; }
+.action-buttons {
     display: flex;
-    flex-direction: column;
-    height: 550px;
-    width: 600px;
-    background: #ffff;
-    border-radius: 22px;
-}
-.popheader {
-    width: 100%;
-    height: 65px;
-    border-radius: 22px 22px 0 0;
-    background-color: #d9d9d9;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    box-sizing: border-box;
-}
-.popheader p {
-    margin: 15px;
-    font-size: 1.1em;
-    font-weight: bolder;
-}
-.prod-details-con {
-    padding: 20px;
-}
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-bottom: 15px;
-}
-.form-row {
-    display: flex;
-    gap: 15px;
-}
-.form-row .form-group {
-    flex: 1;
-}
-.form-group label {
-    font-size: 0.85em;
-    color: #555;
-    font-weight: 500;
-}
-.form-group input,
-.form-group select,
-.form-group textarea {
-    padding: 10px;
-    border: 1px solid rgba(143, 143, 143, 0.5);
-    border-radius: 8px;
-    font-size: 0.9em;
-    outline: none;
-    width: 100%;
-    box-sizing: border-box;
-}
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: #024ea0;
-    box-shadow: 0 0 0 2px rgba(2, 78, 160, 0.15);
-}
-.form-group textarea {
-    height: 80px;
-    resize: none;
-}
-.form-buttons {
-    display: flex;
+    gap: 8px;
     justify-content: flex-end;
-    gap: 10px;
-    margin-top: 10px;
 }
-.cancelbtn {
-    padding: 10px 20px;
-    border: 1px solid rgba(143, 143, 143, 0.5);
-    border-radius: 8px;
-    background-color: white;
-    cursor: pointer;
-    font-size: 0.9em;
+.action-buttons form { margin: 0; }
+
+.empty-row {
+    text-align: center;
+    color: #999;
+    padding: 40px 0 !important;
 }
-.cancelbtn:hover {
-    background-color: #f0f0f0;
-}
-.savebtn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    background-color: rgb(51, 186, 101);
-    color: white;
-    cursor: pointer;
-    font-size: 0.9em;
-    font-weight: bold;
-}
-.savebtn:hover {
-    background-color: rgb(39, 160, 84);
+.pagination-wrap { margin-top: 20px; }
+
+/* Mobile: each row becomes a card */
+@media (max-width: 768px) {
+    .inventory-page { padding: 16px; }
+
+    .inventory-header { flex-direction: column; align-items: stretch; }
+    .inventory-header .btn { text-align: center; }
+
+    .product-table thead { display: none; }
+    .product-table, .product-table tbody, .product-table tr, .product-table td {
+        display: block;
+        width: 100%;
+    }
+    .product-table tr {
+        padding: 14px;
+        border-bottom: 1px solid #eee;
+    }
+    .product-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border: none;
+    }
+    /* shows the column name on the left, using data-label from the blade */
+    .product-table td::before {
+        content: attr(data-label);
+        font-size: 0.75rem;
+        color: #888;
+        text-transform: uppercase;
+    }
+    .actions-col { text-align: left !important; }
 }

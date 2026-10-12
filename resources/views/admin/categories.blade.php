@@ -3,48 +3,65 @@
 @section('title', 'Categories')
 
 @section('content')
-<div class="categories-page">
-    <h2>Categories</h2>
-    <p class="page-subtitle">Organize your products into categories.</p>
+<link rel="stylesheet" href="{{ asset('css/inventory.css') }}">
+<link rel="stylesheet" href="{{ asset('css/categories.css') }}">
 
+<div class="categories-page">
+
+    <div class="categories-header">
+        <h2>Categories</h2>
+        <p class="subtitle">Organize your products into categories.</p>
+    </div>
 
     <form method="POST" action="{{ route('admin.categories.store') }}" class="category-form">
         @csrf
         <h3 class="form-title">Add New Category</h3>
-        <input type="text" name="name" placeholder="Category name" value="{{ old('name') }}" required>
-        <input type="text" name="description" placeholder="Description" value="{{ old('description') }}">
-        <button type="submit">Add Category</button>
+
+        <div class="category-fields">
+            <input type="text" name="name" placeholder="Category name" value="{{ old('name') }}" required>
+            <input type="text" name="description" placeholder="Description (optional)" value="{{ old('description') }}">
+            <button type="submit" class="btn btn-primary">Add Category</button>
+        </div>
     </form>
 
-
     <div class="table-card">
-        <h3>All Categories</h3>
-        <table class="dashboard-table">
+        <div class="table-card-header">
+            <h3>All Categories</h3>
+        </div>
+
+        <table class="category-table">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Products</th>
-                    <th>Actions</th>
+                    <th class="actions-col">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($categories as $category)
                     <tr>
-                        <td>
+                        <td data-label="Name">
                             <div class="category-name">
                                 <span class="category-letter">{{ strtoupper(mb_substr($category->name, 0, 1)) }}</span>
-                                {{ $category->name }}
+                                <span>{{ $category->name }}</span>
                             </div>
                         </td>
-                        <td class="category-description">{{ $category->description }}</td>
-                        <td><span class="count-badge">{{ $category->products_count }}</span></td>
-                        <td>
+
+                        <td data-label="Description" class="category-description">
+                            {{ $category->description ?: '—' }}
+                        </td>
+
+                        <td data-label="Products">
+                            <span class="count-badge">{{ $category->products_count }}</span>
+                        </td>
+
+                        <td data-label="Actions" class="actions-col">
                             <form action="{{ route('admin.categories.destroy', $category) }}" method="POST"
                                   onsubmit="return confirm('Delete this category?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="delete-btn">Delete</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -56,5 +73,6 @@
             </tbody>
         </table>
     </div>
+
 </div>
 @endsection
