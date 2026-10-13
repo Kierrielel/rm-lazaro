@@ -1,73 +1,120 @@
-.orders-content {
-    width: 100%;
+.orders-page {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.orders-header {
     display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    min-height: 0;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
 }
-.obottom-con {
-    margin-top: 15px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+.orders-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #111;
 }
-.box-bottom {
-    width: 90%; 
-    max-width: 95%; 
-    background-color: white;
-    border: 1px solid rgba(143, 143, 143, 0.662);
-    border-radius: 15px;
-    overflow: hidden;
+
+.filter-form { margin: 0; }
+.filter-form select {
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: white;
+    outline: none;
+    cursor: pointer;
 }
-.box-bottom-header {
-    padding: 15px 20px;
-    border-bottom: 1px solid rgba(143, 143, 143, 0.3);
+.filter-form select:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
 }
-.box-bottom-header h3 {
-    font-size: 1.2em;
-    color: #333;
-}
+
 .order-table {
     width: 100%;
     border-collapse: collapse;
 }
 .order-table th {
-    background-color: #d5d5d5;
-    padding: 16px 20px;
-    font-size: 0.95rem;
     text-align: left;
-    font-weight: 600;
+    padding: 14px 16px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #777;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
 }
 .order-table td {
-    padding: 16px 20px;
-    font-size: 0.95rem;
-    font-weight: 400;
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
 }
-.order-table tbody tr:nth-of-type(odd) {
-    background-color: #f3f3f3;
+.order-table tbody tr:last-child td { border-bottom: none; }
+.order-table tbody tr:hover { background: #fafafa; }
+
+.order-id { font-weight: 700; color: #111; }
+.order-total { font-weight: 600; }
+.order-date { color: #777; }
+
+
+.order-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
 }
-.order-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
+.order-pending    { background: #fef3c7; color: #b45309; }
+.order-processing { background: #dbeafe; color: #1d4ed8; }
+.order-completed  { background: #dcfce7; color: #15803d; }
+.order-cancelled  { background: #fee2e2; color: #b91c1c; }
+
+
+.btn-blue {
+    background: #dbeafe;
+    color: #1d4ed8;
 }
-.status-badge {
-    padding: 4px 10px;
-    border-radius: 30px;
-    font-size: 0.8em;
-    font-weight: 500;
+.btn-blue:hover {
+    background: #bfdbfe;
 }
-.status-completed {
-    background-color: #d1fae5;
-    color: #065f46;
-}
-.status-pending {
-    background-color: #fef9c3;
-    color: #854d0e;
-}
-.status-cancelled {
-    background-color: #fee2e2;
-    color: #991b1b;
-}
-.status-processing {
-    background-color: #dbeafe;
-    color: #1e40af;
+
+.order-table .actions-col { text-align: right; }
+
+/* Mobile */
+@media (max-width: 768px) {
+    .orders-page { padding: 16px; }
+
+    .orders-header { flex-direction: column; align-items: stretch; }
+    .filter-form select { width: 100%; }
+
+    .order-table thead { display: none; }
+    .order-table, .order-table tbody, .order-table tr, .order-table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .order-table tr {
+        padding: 14px 16px;
+        border-bottom: 1px solid #eee;
+    }
+    .order-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border: none;
+    }
+    .order-table td::before {
+        content: attr(data-label);
+        font-size: 0.75rem;
+        color: #888;
+        text-transform: uppercase;
+    }
+    .order-table .actions-col { justify-content: flex-end; }
 }
