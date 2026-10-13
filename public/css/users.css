@@ -1,65 +1,105 @@
-.user-content {
-    flex: 1;
-    background-color: #f6f6f6;
-    overflow-y: auto;
-    min-height: 0;
-}
-.empty-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 400px;
-    color: #888;
-}
-.users-table-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.users-table-container table {
-    border-collapse: collapse;
-    width: 1200px;
-    margin: 25px 0;
-    text-align: left;
-}
-.users-table-container tr,
-.users-table-container td,
-.users-table-container th {
-    border: none;
-    text-align: left;
-}
-.users-table thead th {
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: #000000;
+.users-page {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.users-table tbody td {
-    font-weight: 400; 
-    font-size: 0.85rem;
+.users-header { margin-bottom: 20px; }
+.users-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #111;
 }
+
 .users-table {
-    border-radius: 5px 5px 0 0;
-    overflow: hidden;
+    width: 100%;
+    border-collapse: collapse;
 }
-.users-table thead {
-    background-color: #d5d5d5;
-    color: #000000;
+.users-table th {
     text-align: left;
+    padding: 14px 16px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #777;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
 }
-.users-table th,
 .users-table td {
-    padding: 12px 15px;
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+}
+.users-table tbody tr:last-child td { border-bottom: none; }
+.users-table tbody tr:hover { background: #fafafa; }
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.user-letter {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #dcfce7;
+    color: #15803d;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+.user-name { font-weight: 600; color: #111; }
+.user-email { font-size: 0.8rem; color: #888; }
+.user-date { color: #777; }
+
+.role-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: #f1f1f1;
+    color: #555;
+}
+.role-admin {
+    background: #dbeafe;
+    color: #1d4ed8;
 }
 
-.users-table tbody tr:nth-of-type(odd) {
-    background-color: #f3f3f3;
-}
-.users-table tbody tr:nth-of-type(even) {
-    background-color: rgb(193, 193, 193);
-}
-.action-buttons {
-    display: flex;
-    gap: 15px;
-    align-items: center;
+.users-table .actions-col { text-align: right; }
+.users-table .actions-col form { margin: 0; }
+
+/* Mobile*/
+@media (max-width: 768px) {
+    .users-page { padding: 16px; }
+
+    .users-table thead { display: none; }
+    .users-table, .users-table tbody, .users-table tr, .users-table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .users-table tr {
+        padding: 14px 16px;
+        border-bottom: 1px solid #eee;
+    }
+    .users-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border: none;
+    }
+    .users-table td::before {
+        content: attr(data-label);
+        font-size: 0.75rem;
+        color: #888;
+        text-transform: uppercase;
+    }
+    .users-table .actions-col { justify-content: flex-end; }
 }
