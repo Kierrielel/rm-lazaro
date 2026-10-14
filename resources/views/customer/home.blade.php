@@ -12,7 +12,7 @@
 @php
     $banners = [
         '1banner.jpg',
-        '1banner.jpg',
+        'banner3.jpg',
         '1banner.jpg',
     ];
 @endphp
