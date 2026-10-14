@@ -10,8 +10,12 @@ class FinanceController extends Controller
 {
     public function index()
     {
+        $monthExpression = DB::connection()->getDriverName() === 'sqlite'
+            ? "strftime('%Y-%m', order_date)"
+            : "DATE_FORMAT(order_date, '%Y-%m')";
+
         $monthlyRevenue = Order::where('order_status', 'completed')
-            ->selectRaw("strftime('%Y-%m', order_date) as month, SUM(total_amount) as total")
+            ->selectRaw("{$monthExpression} as month, SUM(total_amount) as total")
             ->groupBy('month')
             ->orderByDesc('month')
             ->take(12)

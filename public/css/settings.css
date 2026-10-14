@@ -1,100 +1,80 @@
-.setting-card-container {
-    margin: 15px;
+.settings-page {
+    padding: 24px;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.settings-page .settings-header { margin-bottom: 20px; }
+.settings-page .settings-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #111;
+}
+
+.settings-page .settings-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    padding: 28px;
+    margin-bottom: 20px;
+}
+.settings-page .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 16px;
+}
+
+.settings-page .form-row {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    gap: 16px;
+}
+.settings-page .form-group {
     flex: 1;
-}
-.align-container {
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
-}
-.store-info-container,
-.account-setting-container {
-    border: 1px solid rgba(143, 143, 143, 0.662);
-    border-radius: 15px;
-    width: 590px;
-    background-color: white;
-}
-.card-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px 20px;
-    border-bottom: 1px solid rgba(143, 143, 143, 0.3);
-}
-.card-header h3 {
-    font-size: 1em;
-    color: #333;
-}
-.card-body {
-    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 6px;
+    margin-bottom: 18px;
 }
-.form-row {
-    display: flex;
-    gap: 15px;
+.settings-page .settings-card .form-group:last-child { margin-bottom: 0; }
+.settings-page .form-row .form-group { margin-bottom: 0; }
+
+.settings-page .form-group label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #555;
 }
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    flex: 1;
-}
-.form-group label {
-    font-size: 0.8em;
-    color: rgba(118, 110, 110, 0.9);
-}
-.form-group input {
-    padding: 10px;
-    border: 1px solid rgba(143, 143, 143, 0.4);
+.settings-page .form-group input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 14px;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    font-size: 0.9em;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: white;
     outline: none;
-    background-color: white;
 }
-.form-group input:focus {
-    border-color: #024ea0;
-    box-shadow: 0 0 0 2px rgba(2, 78, 160, 0.15);
+.settings-page .form-group input:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
 }
-.form-group input:disabled {
-    background-color: #f0f0f0;
+.settings-page .hint {
+    font-size: 0.78rem;
     color: #999;
-    cursor: not-allowed;
 }
-.alert-success {
-    background-color: #d1fae5;
-    color: #065f46;
-    padding: 10px 20px;
-    border-radius: 8px;
-    margin: 10px 15px;
-    font-size: 0.9em;
-}
-.alert-error {
-    background-color: #fee2e2;
-    color: #991b1b;
-    padding: 10px 20px;
-    border-radius: 8px;
-    margin: 10px 15px;
-    font-size: 0.9em;
-}
-.signout{
-    background-color: #f6f6f6;
-    border-radius: 10px;
-    padding: 5px 10px;
-    width: 210px;
+
+.settings-page .form-buttons {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 15px;
+    justify-content: flex-end;
 }
-.signout:hover {
-    background-color: #d62929;
-}
-#signbutton{
-    border: none;
-    width: 210px;   
+
+@media (max-width: 640px) {
+    .settings-page { padding: 16px; }
+    .settings-page .settings-card { padding: 20px; }
+    .settings-page .form-row {
+        flex-direction: column;
+        gap: 18px;
+    }
+    .settings-page .form-buttons .btn { width: 100%; }
 }

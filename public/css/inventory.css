@@ -4,7 +4,6 @@
     margin: 0 auto;
 }
 
-/* Header */
 .inventory-header {
     display: flex;
     justify-content: space-between;
@@ -23,7 +22,6 @@
     font-size: 0.9rem;
 }
 
-/* Buttons */
 .btn {
     padding: 10px 16px;
     border: none;
@@ -43,7 +41,6 @@
 .btn-danger { background: #fee2e2; color: #b91c1c; }
 .btn-danger:hover { background: #fecaca; }
 
-/* Search */
 .search-form {
     display: flex;
     gap: 10px;
@@ -63,7 +60,6 @@
     box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
 }
 
-/* Table card */
 .table-card {
     background: white;
     border-radius: 12px;
@@ -94,7 +90,6 @@
 .product-table tbody tr:last-child td { border-bottom: none; }
 .product-table tbody tr:hover { background: #fafafa; }
 
-/* Product cell */
 .product-info {
     display: flex;
     align-items: center;
@@ -112,7 +107,6 @@
     color: #111;
 }
 
-/* Category + stock badges */
 .category-tag {
     background: #f1f1f1;
     padding: 4px 12px;
@@ -131,7 +125,6 @@
 .stock-low { background: #fef3c7; color: #b45309; }
 .stock-out { background: #fee2e2; color: #b91c1c; }
 
-/* Actions */
 .actions-col { text-align: right !important; }
 .action-buttons {
     display: flex;
@@ -147,7 +140,15 @@
 }
 .pagination-wrap { margin-top: 20px; }
 
-/* Mobile: each row becomes a card */
+.search-form .btn-dark {
+    background: #2563eb;
+    color: white;
+}
+.search-form .btn-dark:hover {
+    background: #1d4ed8;
+}
+
+/* Mobile*/
 @media (max-width: 768px) {
     .inventory-page { padding: 16px; }
 
@@ -170,7 +171,7 @@
         padding: 6px 0;
         border: none;
     }
-    /* shows the column name on the left, using data-label from the blade */
+
     .product-table td::before {
         content: attr(data-label);
         font-size: 0.75rem;
