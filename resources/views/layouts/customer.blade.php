@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +21,8 @@
     <title>@yield('title', 'RM LAZARO ENTERPRISES HARDWARE')</title>
 </head>
 <body class="@stack('body-class')">
+
+    @sectionMissing('hide_layout')
     <header>
         <div class="banner">
             <div class="logo">
@@ -75,14 +76,11 @@
                             <p>{{ auth()->user()->username }}</p>
                         </a>
 
-                        <form action="{{ route('logout') }}" method="post" style="display:inline">
-                            @csrf
-                            <button type="submit"
-                                    class="shop-link"
-                                    style="background:none;border:none;cursor:pointer;">
-                                Logout
-                            </button>
-                        </form>
+                        <button type="button"
+                                class="logout-btn"
+                                onclick="document.getElementById('logoutModal').showModal()">
+                            Logout
+                        </button>
                     @else
                         <a href="{{ route('login') }}" class="user-login">
                             <p>Login</p>
@@ -92,6 +90,7 @@
             </nav>
         </div>
     </header>
+    @endif
 
     <main>
         @if (session('success'))
@@ -113,6 +112,7 @@
         @yield('content')
     </main>
 
+    @sectionMissing('hide_layout')
     <footer>
         <div class="store-info-section">
             <div class="store-info-card">
@@ -127,5 +127,23 @@
             <p>&copy; {{ date('Y') }} RM LAZARO ENTERPRISES HARDWARE. All Rights Reserved.</p>
         </div>
     </footer>
+    @endif
+
+    {{-- Logout confirmation --}}
+    @auth
+    <dialog id="logoutModal" class="logout-modal">
+        <h3>Log out?</h3>
+        <p>Are you sure you want to log out of your account?</p>
+
+        <div class="logout-actions">
+            <button type="button" class="btn btn-light" onclick="this.closest('dialog').close()">Cancel</button>
+
+            <form action="{{ route('logout') }}" method="post">
+                @csrf
+                <button type="submit" class="btn btn-danger">Yes, Log out</button>
+            </form>
+        </div>
+    </dialog>
+    @endauth
 </body>
 </html>

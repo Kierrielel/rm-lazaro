@@ -70,7 +70,6 @@
         </div>
     </div>
 
-    {{-- Logout confirmation --}}
     <dialog id="logoutModal" class="logout-modal">
         <h3>Log out?</h3>
         <p>Are you sure you want to log out of your account?</p>

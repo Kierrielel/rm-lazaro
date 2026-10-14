@@ -3,6 +3,8 @@
 
 @section('title', 'Sign Up')
 
+@section('hide_layout', true)
+
 @push('body-class')
     login-page
 @endpush
