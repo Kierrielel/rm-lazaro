@@ -11,7 +11,7 @@ class CartController extends Controller
     public function index(Request $request)
     {
         $items = Cart::with('product')->where('user_id', $request->user()->id)->get();
-        $total = $items->sum(fn ($item) => $item->quantity * $item->product->price);
+        $total = $items->sum(fn($item) => $item->quantity * $item->product->price);
 
         return view('customer.cart', compact('items', 'total'));
     }
@@ -20,23 +20,45 @@ class CartController extends Controller
     {
         $data = $request->validate([
             'product_id' => ['required', 'exists:products,id'],
+            'variant_id' => ['nullable', 'integer'],
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
 
-        $product = Product::findOrFail($data['product_id']);
+        $product = Product::with('variants')->findOrFail($data['product_id']);
         $userId = $request->user()->id;
 
-        $existing = Cart::where('user_id', $userId)->where('product_id', $product->id)->first();
+        $variant = null;
+        if ($product->hasVariants()) {
+            $variant = $product->variants->firstWhere('id', $data['variant_id'] ?? null);
+
+            if (!$variant) {
+                return back()->withErrors(['variant_id' => 'Please choose all options.']);
+            }
+            $available = $variant->stock_quantity;
+        } else {
+            $available = $product->stock_quantity;
+        }
+
+        $existing = Cart::where('user_id', $userId)
+            ->where('product_id', $product->id)
+            ->where('variant_id', $variant?->id)
+            ->first();
+
         $newQuantity = $data['quantity'] + ($existing->quantity ?? 0);
 
-        if ($newQuantity > $product->stock_quantity) {
+        if ($newQuantity > $available) {
             return back()->withErrors(['quantity' => 'Not enough stock available.']);
         }
 
         if ($existing) {
             $existing->update(['quantity' => $newQuantity]);
         } else {
-            Cart::create(['user_id' => $userId, 'product_id' => $product->id, 'quantity' => $data['quantity']]);
+            Cart::create([
+                'user_id' => $userId,
+                'product_id' => $product->id,
+                'variant_id' => $variant?->id,
+                'quantity' => $data['quantity'],
+            ]);
         }
 
         return back()->with('success', 'Added to cart.');

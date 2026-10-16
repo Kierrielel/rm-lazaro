@@ -7,13 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-        'category_id', 'name', 'brand', 'description',
-        'price', 'stock_quantity', 'image_path',
+        'category_id',
+        'name',
+        'brand',
+        'description',
+        'price',
+        'stock_quantity',
+        'image_path',
+        'variation_options',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
         'created_at' => 'datetime',
+        'variation_options' => 'array',
     ];
 
     public function category()
@@ -26,7 +33,6 @@ class Product extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    /** Resolves the stored image_path (e.g. "products/foo.jpg") to a public URL. */
     public function getImageUrlAttribute(): string
     {
         return $this->image_path
@@ -37,5 +43,15 @@ class Product extends Model
     public function inStock(int $quantity = 1): bool
     {
         return $this->stock_quantity >= $quantity;
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
+    public function hasVariants(): bool
+    {
+        return $this->variants->isNotEmpty();
     }
 }
