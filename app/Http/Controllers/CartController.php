@@ -10,8 +10,8 @@ class CartController extends Controller
 {
     public function index(Request $request)
     {
-        $items = Cart::with('product')->where('user_id', $request->user()->id)->get();
-        $total = $items->sum(fn($item) => $item->quantity * $item->product->price);
+        $items = Cart::with(['product', 'variant'])->where('user_id', $request->user()->id)->get();
+        $total = $items->sum(fn($item) => $item->subtotal);
 
         return view('customer.cart', compact('items', 'total'));
     }
@@ -69,10 +69,12 @@ class CartController extends Controller
         abort_unless($cart->user_id === $request->user()->id, 403);
 
         $action = $request->validate(['action' => ['required', 'in:increase,decrease']])['action'];
-        $cart->load('product');
+        $cart->load('product', 'variant');
+
+        $available = $cart->variant ? $cart->variant->stock_quantity : $cart->product->stock_quantity;
 
         $newQuantity = $cart->quantity;
-        if ($action === 'increase' && $newQuantity < $cart->product->stock_quantity) {
+        if ($action === 'increase' && $newQuantity < $available) {
             $newQuantity++;
         } elseif ($action === 'decrease') {
             $newQuantity--;
