@@ -9,13 +9,14 @@
             @forelse ($items as $item)
                 <div class="cart-list-container">
                     <div class="cart-list-img">
-                        <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}">
+                        <img src="{{ ($item->variant ?? $item->product)->image_url }}" alt="{{ $item->product->name }}">
                     </div>
                     <div class="cart-list-name">
                         <a href="{{ route('products.show', $item->product) }}">{{ $item->product->name }}</a>
+                        @if ($item->variant) <small>{{ $item->variant->name }}</small> @endif
                     </div>
                     <div class="cart-list-price">
-                        <p>&#8369;{{ number_format($item->product->price, 2) }}</p>
+                        <p>&#8369;{{ number_format($item->unit_price, 2) }}</p>
                     </div>
                     <div class="button">
                         <div class="add-button">

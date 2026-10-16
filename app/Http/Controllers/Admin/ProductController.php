@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -31,32 +32,33 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $data = $this->validateProduct($request);
+        $validated = $this->validateProduct($request);
 
-        if ($request->hasFile('image')) {
-            $data['image_path'] = $this->storeImage($request);
-        }
-
-        Product::create($data);
+        DB::transaction(function () use ($request, $validated) {
+            $attributes = $this->productAttributes($validated, $request);
+            $product = Product::create($attributes);
+            $this->syncVariants($product, $attributes['variation_options'], $request->input('variants', []));
+        });
 
         return redirect()->route('admin.inventory')->with('success', 'Product added.');
     }
 
     public function edit(Product $product)
     {
+        $product->load('variants');
         $categories = Category::orderBy('name')->get();
         return view('admin.edit_product', compact('product', 'categories'));
     }
 
     public function update(Request $request, Product $product)
     {
-        $data = $this->validateProduct($request, $product->id);
+        $validated = $this->validateProduct($request, $product->id);
 
-        if ($request->hasFile('image')) {
-            $data['image_path'] = $this->storeImage($request);
-        }
-
-        $product->update($data);
+        DB::transaction(function () use ($request, $validated, $product) {
+            $attributes = $this->productAttributes($validated, $request);
+            $product->update($attributes);
+            $this->syncVariants($product, $attributes['variation_options'], $request->input('variants', []));
+        });
 
         return redirect()->route('admin.inventory')->with('success', 'Product updated.');
     }
@@ -77,21 +79,94 @@ class ProductController extends Controller
             'stock_quantity' => ['required', 'integer', 'min:0'],
             'description' => ['nullable', 'string'],
             'image' => ['nullable', 'image', 'max:4096'],
+
+            'option_types' => ['nullable', 'array'],
+            'option_types.*.name' => ['nullable', 'string', 'max:50'],
+            'option_types.*.values' => ['nullable', 'string', 'max:500'],
+
+            'variants' => ['nullable', 'array'],
+            'variants.*.id' => ['nullable', 'integer'],
+            'variants.*.options' => ['required', 'json'],
+            'variants.*.price' => ['nullable', 'numeric', 'min:0'],
+            'variants.*.stock_quantity' => ['required', 'numeric', 'min:0'],
         ]);
     }
 
-    /**
-     * Stores the uploaded image directly under public/products (same layout the
-     * original PHP app used), so no storage:link / public disk setup is needed.
-     * Swap this for Storage::disk('public') if you'd rather use Laravel's
-     * storage convention once the app is otherwise working.
-     */
+    private function productAttributes(array $validated, Request $request): array
+    {
+        $attributes = Arr::only($validated, [
+            'name', 'brand', 'category_id', 'price', 'stock_quantity', 'description',
+        ]);
+
+        $attributes['variation_options'] = $this->buildVariationOptions($validated['option_types'] ?? []);
+
+        if ($request->hasFile('image')) {
+            $attributes['image_path'] = $this->storeImage($request);
+        }
+
+        return $attributes;
+    }
+
+    private function buildVariationOptions(array $types): ?array
+    {
+        $options = [];
+
+        foreach ($types as $type) {
+            $name = trim($type['name'] ?? '');
+            $values = collect(explode(',', $type['values'] ?? ''))
+                ->map(fn ($value) => trim($value))
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
+
+            if ($name !== '' && $values) {
+                $options[$name] = $values;
+            }
+        }
+
+        return $options ?: null;
+    }
+
+    private function syncVariants(Product $product, ?array $variationOptions, array $rows): void
+    {
+        $keep = [];
+
+        if ($variationOptions) {
+            foreach ($rows as $row) {
+                $options = json_decode($row['options'], true);
+                if (!is_array($options) || !$options) {
+                    continue;
+                }
+
+                $attributes = [
+                    'name' => implode(' / ', $options),
+                    'options' => $options,
+                    'price' => ($row['price'] ?? '') === '' ? null : $row['price'],
+                    'stock_quantity' => $row['stock_quantity'],
+                ];
+
+                $variant = !empty($row['id']) ? $product->variants()->find($row['id']) : null;
+
+                if ($variant) {
+                    $variant->update($attributes);
+                } else {
+                    $variant = $product->variants()->create($attributes);
+                }
+
+                $keep[] = $variant->id;
+            }
+        }
+
+        $product->variants()->whereNotIn('id', $keep)->delete();
+    }
+
     private function storeImage(Request $request): string
     {
         $file = $request->file('image');
         $filename = time() . '_' . $file->getClientOriginalName();
         $file->move(public_path('product-images'), $filename);
 
-        return 'products/' . $filename; // e.g. "products/1778125906_foo.jpg"
+        return 'product-images/' . $filename;
     }
 }

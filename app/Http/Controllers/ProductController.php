@@ -34,6 +34,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $product->load('variants');
         return view('customer.product_page', compact('product'));
     }
 }
