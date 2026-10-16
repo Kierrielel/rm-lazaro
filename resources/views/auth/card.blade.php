@@ -1,3 +1,7 @@
+@if (session('success'))
+    <div class="alert alert-success auth-toast">{{ session('success') }}</div>
+@endif
+
 <div class="auth-card {{ $mode === 'signup' ? 'is-signup' : '' }}" id="authCard">
 
     {{-- LOGIN --}}
@@ -15,15 +19,10 @@
 
         <h2>Log in</h2>
         <p class="auth-subtitle">Enter your details to continue.</p>
-
-        @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
         
         @if ($errors->any() && $mode === 'login')
             <div class="auth-error">{{ $errors->first() }}</div>
         @endif
-
         <form method="POST" action="{{ route('login') }}">
             @csrf
 

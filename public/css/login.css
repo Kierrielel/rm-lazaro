@@ -380,6 +380,19 @@ body.login-page main {
     color: #f08a24;
 }
 
+.auth-form .alert,
+.auth-form .alert-success,
+.auth-form .alert-error {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 18px;
+    padding: 10px 14px;
+    font-size: 0.85em;
+    border-radius: 10px;
+    box-shadow: none;
+    justify-content: flex-start;
+    text-align: left;
+}
 /*  Phones */
 @media (max-width: 760px) {
     .auth-card {
