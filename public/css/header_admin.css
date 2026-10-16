@@ -143,6 +143,48 @@ header {
     margin: auto;
 }
 
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+/* Logout */
+.logout-modal {
+    margin: auto;
+    border: none;
+    border-radius: 14px;
+    padding: 24px;
+    width: 90%;
+    max-width: 380px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+.logout-modal::backdrop {
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(2px);
+}
+.logout-modal h3 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    color: #111;
+}
+.logout-modal p {
+    margin: 0 0 20px;
+    font-size: 0.9rem;
+    color: #666;
+}
+.logout-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.logout-actions form { 
+    margin: 0; 
+}
+
 
 @media (max-width: 700px) {
     .banner-rightside {

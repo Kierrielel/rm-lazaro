@@ -276,7 +276,80 @@ nav form button.shop-link:hover {
     color: rgba(255, 255, 255, 0.6);
 }
 
+.logout-modal {
+    margin: auto;
+    border: none;
+    border-radius: 14px;
+    padding: 24px;
+    width: 90%;
+    max-width: 380px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+.logout-modal::backdrop {
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(2px);
+}
+.logout-modal h3 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    color: #111;
+}
+.logout-modal p {
+    margin: 0 0 20px;
+    font-size: 0.9rem;
+    color: #666;
+}
+.logout-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.logout-actions form { margin: 0; }
 
+.logout-actions .btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+}
+.logout-actions .btn-light { 
+    background: #f1f1f1; color: #222; 
+}
+.logout-actions .btn-light:hover { 
+    background: #e4e4e4; 
+}
+.logout-actions .btn-danger { 
+    background: #fee2e2; color: #b91c1c; 
+}
+.logout-actions .btn-danger:hover { 
+    background: #fecaca; 
+}
+
+.links-container .logout-btn,
+.logout-btn {
+    padding: 10px 26px !important;
+    margin-left: 10px;
+    background: white !important;
+    border: 1px solid #d5e0f5 !important;
+    border-radius: 30px !important;
+    color: #15387b !important;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: bold;
+    line-height: normal;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.links-container .logout-btn:hover,
+.logout-btn:hover {
+    background: #eef3fc !important;
+}
+
+/* PHONE */
 
 @media (min-width: 701px) {
     header {

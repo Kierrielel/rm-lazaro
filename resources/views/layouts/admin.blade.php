@@ -31,10 +31,7 @@
                 </div>
             </div>
             <div class="banner-rightside">
-                <form action="{{ route('logout') }}" method="post">
-                    @csrf
-                    <button type="submit" style="background:none;border:none;cursor:pointer;color:inherit;">Logout</button>
-                </form>
+                <button type="button" class="logout-btn" onclick="document.getElementById('logoutModal').showModal()">Logout</button>
             </div>
         </div>
     </header>
@@ -72,5 +69,19 @@
             @yield('content')
         </div>
     </div>
+
+    <dialog id="logoutModal" class="logout-modal">
+        <h3>Log out?</h3>
+        <p>Are you sure you want to log out of your account?</p>
+
+        <div class="logout-actions">
+            <button type="button" class="btn btn-light" onclick="this.closest('dialog').close()">Cancel</button>
+
+            <form action="{{ route('logout') }}" method="post">
+                @csrf
+                <button type="submit" class="btn btn-danger">Yes, Log out</button>
+            </form>
+        </div>
+    </dialog>
 </body>
 </html>

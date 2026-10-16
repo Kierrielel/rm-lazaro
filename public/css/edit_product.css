@@ -1,13 +1,120 @@
-.edit-form-container {
-    margin: 20px;
-    background-color: white;
-    border: 1px solid rgba(143, 143, 143, 0.4);
-    border-radius: 15px;
-    padding: 25px;
-    max-width: 1200px;
+.form-page {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
 }
-.form-buttons a{
-    font-weight: bold;
-    color: black;
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 14px;
+    color: #777;
+    font-size: 0.85rem;
     text-decoration: none;
+}
+.back-link:hover { color: #111; }
+
+.form-header { margin-bottom: 20px; }
+.form-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #111;
+}
+
+.form-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    padding: 28px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+}
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+.form-group label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #555;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: white;
+    outline: none;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+}
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.image-upload {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    background: #fafafa;
+}
+.image-upload input[type="file"] {
+    border: none;
+    padding: 0;
+    background: transparent;
+    font-size: 0.85rem;
+}
+.current-image {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #eee;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    .form-page { padding: 16px; }
+    .form-card { padding: 20px; }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .image-upload {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-buttons { flex-direction: column-reverse; }
+    .form-buttons .btn {
+        width: 100%;
+        text-align: center;
+    }
 }

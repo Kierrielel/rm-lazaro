@@ -1,59 +1,181 @@
-.order-details-content {
-    flex: 1;
-    background-color: #f6f6f6;
-    overflow-y: auto;
-    min-height: 0;
+.details-page {
+    padding: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
 }
-.order-details-container {
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 14px;
+    color: #777;
+    font-size: 0.85rem;
+    text-decoration: none;
+}
+.back-link:hover { color: #111; }
+
+.details-header {
     display: flex;
-    gap: 15px;
-    margin: 15px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
 }
-.order-details-left {
+.details-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    color: #111;
+}
+
+.details-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+.details-items { flex: 2; }
+.details-side {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    flex: 2;
+    gap: 20px;
 }
-.order-details-right {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    flex: 1;
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 14px;
 }
-.detail-card {
-    background-color: white;
-    border: 1px solid rgba(143, 143, 143, 0.4);
-    border-radius: 15px;
+.details-items .card-title {
+    padding: 18px 20px 0;
+    margin-bottom: 12px;
+}
+
+.info-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
     padding: 20px;
 }
-.detail-card h3 {
-    font-size: 0.95em;
-    color: #333;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(143, 143, 143, 0.3);
-}
-.detail-row {
+.info-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    font-size: 0.85em;
-    border-bottom: 1px solid rgba(143, 143, 143, 0.1);
+    gap: 12px;
+    padding: 10px 0;
+    font-size: 0.9rem;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: right;
+    word-break: break-word;
 }
-.detail-label {
+.info-row:last-child { border-bottom: none; }
+.info-label {
     color: #888;
-    font-weight: 500;
+    text-align: left;
+    flex-shrink: 0;
 }
-.view-btn {
-    padding: 5px 12px;
-    background-color: #024ea0;
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    font-size: 0.8em;
+
+
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
 }
-.view-btn:hover {
-    background-color: #013a7a;
+.items-table th {
+    text-align: left;
+    padding: 14px 20px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #777;
+    background: #fafafa;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+.items-table td {
+    padding: 14px 20px;
+    font-size: 0.9rem;
+    color: #333;
+    border-bottom: 1px solid #f0f0f0;
+}
+.item-name { font-weight: 600; color: #111; }
+.amount-col { text-align: right !important; }
+
+.items-table tfoot td {
+    border-bottom: none;
+    background: #fafafa;
+    font-weight: 700;
+    color: #111;
+}
+.total-label { text-align: right; }
+.total-amount { color: #15803d; font-size: 1rem; }
+
+
+.status-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #555;
+}
+.status-form select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 14px;
+    margin-bottom: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: white;
+    outline: none;
+}
+.status-form select:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+}
+.status-form .btn { width: 100%; }
+
+/* Tablet and mobile */
+@media (max-width: 900px) {
+    .details-layout { flex-direction: column; }
+    .details-items,
+    .details-side { width: 100%; flex: none; }
+}
+
+@media (max-width: 640px) {
+    .details-page { padding: 16px; }
+
+    .items-table thead { display: none; }
+    .items-table, .items-table tbody, .items-table tr, .items-table td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .items-table tbody tr {
+        padding: 12px 20px;
+        border-bottom: 1px solid #eee;
+    }
+    .items-table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        border: none;
+        text-align: right;
+    }
+    .items-table tbody td::before {
+        content: attr(data-label);
+        font-size: 0.75rem;
+        color: #888;
+        text-transform: uppercase;
+    }
+    .items-table tfoot tr {
+        display: flex;
+        justify-content: space-between;
+        padding: 14px 20px;
+        background: #fafafa;
+    }
+    .items-table tfoot td {
+        width: auto;
+        padding: 0;
+        background: none;
+    }
 }
