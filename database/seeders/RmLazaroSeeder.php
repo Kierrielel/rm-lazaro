@@ -21,10 +21,10 @@ class RmLazaroSeeder extends Seeder
 
         User::create([
             'username' => 'admin',
-            'email' => 'test@gmail.com',
+            'email' => 'admin@gmail.com',
             'phone_no' => '09123456789',
-            'name' => 'kier',
-            'password' => Hash::make('changeme123'),
+            'name' => 'admin',
+            'password' => Hash::make('admin123'),
             'role' => 'admin',
             'province' => 'No Address',
             'city' => 'No Address',
@@ -33,11 +33,11 @@ class RmLazaroSeeder extends Seeder
         ]);
 
         User::create([
-            'username' => 'elel',
-            'email' => 'test3@gmail.com',
+            'username' => 'user',
+            'email' => 'user@gmail.com',
             'phone_no' => '09123459999',
             'name' => 'Juan Makasalanan',
-            'password' => Hash::make('changeme123'),
+            'password' => Hash::make('user123'),
             'role' => 'customer',
             'province' => 'Bulacan',
             'city' => 'San Ildefonso',
