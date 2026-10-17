@@ -1,22 +1,98 @@
-.alert-success {
-    text-align: center;
-    background-color: #d1fae5;
-    color: #065f46;
-    padding: 10px 20px;
-    border-radius: 8px;
-    margin: 10px 15px;
-    font-size: 0.9em;
-    width: 100%;
-    max-width: 1150px;
-}
+.alert,
+.alert-success,
 .alert-error {
+    box-sizing: border-box;
+    width: 90%;
+    max-width: 800px;
+    max-height: 300px;
+    margin: 20px auto 0;
+    padding: 18px 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
     text-align: center;
-    background-color: #fee2e2;
-    color: #991b1b;
-    padding: 10px 20px;
-    border-radius: 8px;
-    margin: 10px 15px;
+    font-size: 0.95em;
+    font-weight: bold;
+    border-radius: 14px;
+    border-left: 5px solid;
+    box-shadow: 0 6px 16px rgba(15, 35, 85, 0.12);
+    overflow: hidden;
+    animation: alert-slide 0.4s ease, alert-hide 0.6s ease 2s forwards;
+}
+
+.alert-success::before,
+.alert-error::before {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: white;
     font-size: 0.9em;
-    width: 100%;
-    max-width: 1150px;
+}
+
+.alert-success {
+    background-color: #e6f9ee;
+    color: #166534;
+    border-color: #22c55e;
+}
+
+.alert-success::before {
+    content: "✓";
+    background-color: #22c55e;
+}
+
+.alert-error {
+    background-color: #fdecec;
+    color: #991b1b;
+    border-color: #ef4444;
+    animation: alert-slide 0.4s ease, alert-hide 0.6s ease 2s forwards;
+}
+
+.alert-error::before {
+    content: "!";
+    background-color: #ef4444;
+}
+
+.alert-error ul {
+    list-style: none;
+}
+
+.alert-error li {
+    margin: 2px 0;
+}
+
+.auth-toast {
+    position: fixed !important;
+    top: 20px !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 auto !important;
+    z-index: 200;
+}
+
+@keyframes alert-slide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes alert-hide {
+    to {
+        opacity: 0;
+        max-height: 0;
+        margin: 0 auto;
+        padding-top: 0;
+        padding-bottom: 0;
+        border-width: 0;
+        visibility: hidden;
+    }
 }
