@@ -11,7 +11,8 @@ class ProductController extends Controller
     public function home()
     {
         $featured = Product::with('category')->latest('created_at')->take(8)->get();
-        return view('customer.home', compact('featured'));
+        $categories = Category::withCount('products')->orderBy('name')->get();
+        return view('customer.home', compact('featured', 'categories'));
     }
 
     public function index(Request $request)

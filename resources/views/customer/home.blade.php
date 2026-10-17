@@ -60,6 +60,18 @@
             @endforeach
         </div>
     </section>
+    <section class="products-section">
+        <h2>Shop by Category</h2>
+        <div class="products-grid">
+            @foreach ($categories as $category)
+                <a href="{{ route('products.index', ['category' => $category->id]) }}" class="product-card">
+                    <img src="{{ $category->image_url }}" alt="{{ $category->name }}">
+                    <h4>{{ $category->name }}</h4>
+                    <p>&#8369;{{ $category->products_count }} items</p>
+                </a>
+            @endforeach
+        </div>
+    </section>
 
     <script>
         var slides = document.querySelectorAll('.banner-slide');

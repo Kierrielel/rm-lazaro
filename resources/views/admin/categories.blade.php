@@ -13,13 +13,15 @@
         <p class="subtitle">Organize your products into categories.</p>
     </div>
 
-    <form method="POST" action="{{ route('admin.categories.store') }}" class="category-form">
+    <form method="POST" action="{{ route('admin.categories.store') }}" class="category-form" enctype="multipart/form-data">
         @csrf
         <h3 class="form-title">Add New Category</h3>
 
         <div class="category-fields">
+
             <input type="text" name="name" placeholder="Category name" value="{{ old('name') }}" required>
             <input type="text" name="description" placeholder="Description (optional)" value="{{ old('description') }}">
+            <input type="file" name="image" id="image" accept="image/*">
             <button type="submit" class="btn btn-primary">Add Category</button>
         </div>
     </form>
@@ -57,6 +59,8 @@
                         </td>
 
                         <td data-label="Actions" class="actions-col">
+                            <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-light">Edit</a>
+
                             <form action="{{ route('admin.categories.destroy', $category) }}" method="POST"
                                   onsubmit="return confirm('Delete this category?');">
                                 @csrf

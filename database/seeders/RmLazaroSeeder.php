@@ -46,10 +46,10 @@ class RmLazaroSeeder extends Seeder
         ]);
 
         $products = [
-            [$plumbing->id, 'Wassernison Bidet Complete Set White Nbcs 80W', 'Wassernison', 'Bidet Complete Set', 359.00, 199, 'products/1778124183_Bidet 80Wjpg.jpg'],
+            [$plumbing->id, 'Wassernison Bidet Complete Set White Nbcs 80W', 'Wassernison', 'Bidet Complete Set', 359.00, 200, 'products/1778124183_Bidet 80Wjpg.jpg'],
             [$plumbing->id, 'Wassernison Hybrid Dual Shower Faucet Whb-602', 'Wassernison', 'High quality hybrid basin faucet. Made of brass and zinc. Easy installation.', 566.50, 200, 'products/1778124378_Dual Shower Faucet.jpg'],
             [$plumbing->id, 'Wassernison Universal Flexible P Trap for 114 and NP12', 'Wassernison', 'Universal Flexible P-Trap for 1 1/4 and 1 1/2” Drain', 274.50, 200, 'products/1778124613_imgi_6_NUF0217_256x.png'],
-            [$plumbing->id, 'Wassernison Hybrid Basin Faucet WHB 6258', 'Wassernison', 'Hybrid Basin Faucet', 714.50, 197, 'products/1778124713_imgi_32_NUF1859_2_1024x.png'],
+            [$plumbing->id, 'Wassernison Hybrid Basin Faucet WHB 6258', 'Wassernison', 'Hybrid Basin Faucet', 714.50, 200, 'products/1778124713_imgi_32_NUF1859_2_1024x.png'],
             [$plumbing->id, 'Wassernison Goose Neck Sink Tap Wss604', 'Wassernison', 'Stainless steel, elegant style, easy installation.', 1319.50, 200, 'products/1778124809_imgi_36_NUF1988_1024x.jpg'],
             [$electrical->id, 'Omni 2pcs Universal Outlet with Wide Series Plate WP2-WU', 'Omni', 'Flame-retardant, heat-resistant, 93% copper insides.', 164.50, 200, 'products/1778125064_imgi_14_YAE0795_1_1200x.jpg'],
             [$electrical->id, 'Omni Eco Extension Cord Set 3 Gang 4 Meter Wire - WEE-003', 'Omni', 'Maximum Wattage 2000W, 15A, 250V, BPS Certified Q-1558.', 229.50, 200, 'products/1778125169_imgi_14_YAE0114_1_1200x.jpg'],
