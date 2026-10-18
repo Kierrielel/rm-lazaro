@@ -62,6 +62,11 @@
                     <span>{{ $items->sum('quantity') }}</span>
                 </div>
 
+                <div class="summary-row payment-row">
+                    <span>Payment Method</span>
+                    <span>{{ $items->sum('quantity') }}</span>
+                </div>
+
                 <div class="summary-row total-row">
                     <span>Total</span>
                     <strong>&#8369;{{ number_format($total, 2) }}</strong>
