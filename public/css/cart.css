@@ -147,15 +147,16 @@
 }
 
 .cart-summary h3 {
-    padding-bottom: 12px;
-    border-bottom: 1px solid #e3e9f5;
     color: #15387b;
 }
 
-.summary-row {
+.summary-row{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: #555;
+    padding-top: 12px;
+    border-top: 1px solid #e3e9f5;
     color: #555;
 }
 
