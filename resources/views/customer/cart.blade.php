@@ -58,15 +58,37 @@
                 <h3>Order Summary</h3>
 
                 <div class="summary-row">
+                    <span>Delivery Address</span>
+                    @if($address->isNotEmpty())
+                    <span>{{  }}</span>
+                    @else
+                    <span>
+                        <a href="">Please add your address first before making an order</a>
+                    </span>
+                    @endif
+                </div>
+
+                <div class="summary-row">
                     <span>Items</span>
                     <span>{{ $items->sum('quantity') }}</span>
                 </div>
-
-                <div class="summary-row payment-row">
+                
+                <div class="summary-row">
                     <span>Payment Method</span>
-                    <span>{{ $items->sum('quantity') }}</span>
                 </div>
+                
+                <form action="  " method="POST">
+                    @csrf
+                    <input type="radio" id="standard" name="payment_method" value="cod">
+                    <label for="standard">Cash on delivery (COD)</label><br>
 
+                    <input type="radio" id="standard" name="payment_method" value="gcash">
+                    <label for="standard">Gcash</label><br>
+                    
+                    <input type="radio" id="standard" name="payment_method" value="maya">
+                    <label for="standard">Maya</label><br>
+                </form>
+                
                 <div class="summary-row total-row">
                     <span>Total</span>
                     <strong>&#8369;{{ number_format($total, 2) }}</strong>
