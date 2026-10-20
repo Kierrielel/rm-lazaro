@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
@@ -22,14 +24,28 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
+        $throttleKey = Str::lower($credentials['login_id']) . '|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+
+            return back()->withErrors([
+                'login_id' => "Too many login attempts. Please try again in {$seconds} seconds.",
+            ])->withInput();
+        }
+
         $user = User::where('username', $credentials['login_id'])
             ->orWhere('email', $credentials['login_id'])
             ->orWhere('phone_no', $credentials['login_id'])
             ->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            RateLimiter::hit($throttleKey, 60);
+
             return back()->withErrors(['login_id' => 'Invalid username/email/phone or password.'])->withInput();
         }
+
+        RateLimiter::clear($throttleKey);
 
         Auth::login($user);
         $request->session()->regenerate();
