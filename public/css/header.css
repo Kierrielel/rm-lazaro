@@ -1,4 +1,3 @@
-/*Header & Footer */
 
 :root {
     --color1: black;
@@ -30,7 +29,6 @@ header {
     box-shadow: 0 4px 15px rgba(15, 35, 85, 0.2);
 }
 
-/* Top bar: logo, store name, search */
 .banner {
     padding: 14px 40px;
     background-image: linear-gradient(135deg, #0f2c66, #2b60ba);
@@ -68,9 +66,6 @@ header {
     letter-spacing: 5px;
     color: #ffb020;
 }
-
-
-/* SEARCH BAR */
 
 .search-con {
     margin-left: auto;
@@ -125,9 +120,6 @@ header {
 .search-bar:focus-within .search-icon {
     color: #15387b;
 }
-
-
-
 
 .banner-2 {
     background-color: white;
@@ -348,6 +340,7 @@ nav form button.shop-link:hover {
 .logout-btn:hover {
     background: #eef3fc !important;
 }
+
 
 /* PHONE */
 

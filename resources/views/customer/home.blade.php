@@ -47,6 +47,28 @@
             
         </div>
     </div>
+
+    <div class="deals-banner">
+        <img src="{{ asset('images/yellowhat.png') }}" alt="" class="deals-img deals-img-left">
+
+    <div class="deals-content">
+        <h2 class="deals-title">
+            SPECIAL <span class="deals-highlight">DEALS</span><br>
+            THIS WEEK
+            </h2>
+
+         <div class="deals-divider"></div>
+
+         <p class="deals-text">
+            Get up to <strong>20% OFF</strong> on selected<br>
+            hardware items. Build more, spend less!
+            </p>
+
+         <a href="{{ route('products.index') }}" class="deals-btn">Shop Deals &rarr;</a>
+        </div>
+
+        <img src="{{ asset('images/kit.png') }}" alt="" class="deals-img deals-img-right">
+    </div>
     
     <section class="products-section">
         <h2>Featured Products</h2>
@@ -60,6 +82,7 @@
             @endforeach
         </div>
     </section>
+
     <section class="products-section">
         <h2>Shop by Category</h2>
         <div class="products-grid">
@@ -72,6 +95,7 @@
             @endforeach
         </div>
     </section>
+
 
     <script>
         var slides = document.querySelectorAll('.banner-slide');

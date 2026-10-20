@@ -57,16 +57,17 @@
                         <td data-label="Products">
                             <span class="count-badge">{{ $category->products_count }}</span>
                         </td>
-
                         <td data-label="Actions" class="actions-col">
-                            <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-light">Edit</a>
+                            <div class="actions">
+                                <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-light">Edit</a>
 
-                            <form action="{{ route('admin.categories.destroy', $category) }}" method="POST"
-                                  onsubmit="return confirm('Delete this category?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                            </form>
+                                <form action="{{ route('admin.categories.destroy', $category) }}" method="POST"
+                                      onsubmit="return confirm('Delete this category?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @empty
