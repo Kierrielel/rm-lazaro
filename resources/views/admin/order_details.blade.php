@@ -52,7 +52,36 @@
                 </tfoot>
             </table>
         </div>
-
+        @if ($order->payment_method === 'paylater')
+            @php
+                $paidCount = $order->installments->filter(function ($installment) {
+                    $paidCents = (int) round(
+                        (float) $installment->payments->sum('amount') * 100
+                    );
+                    $dueCents = (int) round((float) $installment->amount_due * 100);
+                
+                    return $paidCents >= $dueCents;
+                })->count();
+            @endphp
+        
+            <div class="info-card">
+                <h3>Installments paid: {{ $paidCount }}/{{ $order->installments->count() }}</h3>
+            
+                @foreach ($order->installments as $installment)
+                    @php
+                        $paid = (float) $installment->payments->sum('amount');
+                        $balance = max(0, (float) $installment->amount_due - $paid);
+                    @endphp
+        
+                    <p>
+                        Installment {{ $installment->installment_number }}:
+                        due {{ $installment->due_date->format('M j, Y') }},
+                        paid ₱{{ number_format($paid, 2) }},
+                        remaining ₱{{ number_format($balance, 2) }}
+                    </p>
+                @endforeach
+            </div>
+        @endif
         <div class="details-side">
 
             <div class="info-card">

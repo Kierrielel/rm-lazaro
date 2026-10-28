@@ -24,6 +24,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         $order->load('items.product', 'user');
+        $order->load('items.product', 'user', 'installments.payments');
         return view('admin.order_details', compact('order'));
     }
 
@@ -32,6 +33,16 @@ class OrderController extends Controller
         $data = $request->validate([
             'order_status' => ['required', 'in:pending,processing,completed,cancelled'],
         ]);
+        
+        if (
+            $data['order_status'] === 'cancelled'
+            && $order->payment_method === 'paylater'
+            && $order->payments()->exists()
+        ) {
+            return back()->withErrors([
+                'order_status' => 'This Pay Later order has recorded payments. Refund them before cancelling the order.',
+            ]);
+        }
 
         $order->update($data);
 

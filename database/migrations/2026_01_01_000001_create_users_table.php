@@ -20,6 +20,10 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('unit')->nullable();
             $table->string('barangay')->nullable();
+            $table->boolean('credit_approved')->default(false);
+            $table->boolean('credit_on_hold')->default(false);
+            $table->decimal('credit_limit', 10, 2)->nullable();
+            $table->string('credit_due_day', 10)->nullable();
             $table->rememberToken();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->nullable();

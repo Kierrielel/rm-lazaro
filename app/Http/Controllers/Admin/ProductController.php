@@ -19,9 +19,14 @@ class ProductController extends Controller
             $query->where('name', 'like', "%{$search}%");
         }
 
-        $products = $query->orderBy('name')->paginate(15)->withQueryString();
+        if ($categoryId = $request->get('category')) {
+            $query->where('category_id', $categoryId);
+        }
 
-        return view('admin.inventory', compact('products'));
+        $products = $query->orderBy('name')->paginate(5)->withQueryString();
+        $categories = Category::orderBy('name')->get();
+
+        return view('admin.inventory', compact('products', 'categories'));
     }
 
     public function create()

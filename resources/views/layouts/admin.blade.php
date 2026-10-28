@@ -47,6 +47,7 @@
                     <a href="{{ route('admin.finance') }}"><div class="finance"><p class="finance-text">Finance Report</p></div></a>
                     <a href="{{ route('admin.orders') }}"><div class="orders"><p class="orders-text">Orders</p></div></a>
                     <a href="{{ route('admin.users') }}"><div class="users"><p class="users-text">Users</p></div></a>
+                    <a href="{{ route('admin.credit-applications.index') }}"><div class="users"><p class="users-text">Credit Applications</p></div></a>
                     <a href="{{ route('admin.settings') }}"><div class="settings"><p class="settings-text">Settings</p></div></a>
                 </div>
             </nav>
