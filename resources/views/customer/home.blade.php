@@ -75,7 +75,7 @@
         <div class="products-grid">
             @foreach ($featured as $product)
                 <a href="{{ route('products.show', $product) }}" class="product-card">
-                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy">
                     <h4>{{ $product->name }}</h4>
                     <p>&#8369;{{ number_format($product->price, 2) }}</p>
                 </a>

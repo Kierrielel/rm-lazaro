@@ -54,5 +54,33 @@
             </tbody>
         </table>
     </div>
+    <div class="table-card">
+        <h3>Low Stock Alert</h3>
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($lowStockProducts as $product)
+                    <tr>
+                        <td>{{ $product->name }}</td>
+                        <td>{{ $product->category }}</td>
+                        <td>{{ $product->stock_quantity }} left</td>
+                    </tr>
+                @empty
+                     <tr>
+                        <td colspan='3' style='text-align:center; padding: 20px; color: #888;'>
+                            No low stock items
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+        {{ $lowStockProducts->links() }}
+    </div>
 </div>
 @endsection

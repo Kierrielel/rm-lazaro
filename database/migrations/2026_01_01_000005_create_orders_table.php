@@ -12,6 +12,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->decimal('total_amount', 10, 2);
+            $table->string('payment_method')->default('cod');
+            $table->date('due_date')->nullable();
             $table->enum('order_status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');
             $table->timestamp('order_date')->useCurrent();
         });

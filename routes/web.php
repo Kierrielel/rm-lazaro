@@ -5,10 +5,12 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FinanceController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\CreditApplicationController as AdminCreditApplicationController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CreditApplicationController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +34,25 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart', [CartController::class, 'add'])->name('cart.add');
     Route::patch('/cart/{cart}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{cart}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::get('/credit/apply', [CreditApplicationController::class, 'create'])
+        ->name('credit.apply');
+    Route::post('/credit/apply', [CreditApplicationController::class, 'store'])
+        ->middleware('throttle:5,1')
+        ->name('credit.apply.store');
+    Route::get('/paylater/payment-attempts/{reference}/status', [
+        \App\Http\Controllers\PayLaterPaymentController::class,
+        'status',
+    ])
+        ->middleware('throttle:30,1')
+        ->name('paylater.payment-attempts.status');
+    Route::post('/paylater/payment-attempts', [\App\Http\Controllers\PayLaterPaymentController::class, 'store'])
+        ->middleware('throttle:10,1')
+        ->name('paylater.payment-attempts.store');
+    Route::get('/paylater/payment-attempts/{reference}', [
+        \App\Http\Controllers\PayLaterPaymentController::class,
+        'show',
+    ])
+        ->name('paylater.payment-attempts.show');
 
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
@@ -52,6 +73,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+    Route::get('/credit-applications', [AdminCreditApplicationController::class, 'index'])
+        ->name('credit-applications.index');
+    Route::get('/credit-applications/{application}', [AdminCreditApplicationController::class, 'show'])
+        ->name('credit-applications.show');
+    Route::get('/credit-applications/{application}/documents/{type}', [AdminCreditApplicationController::class, 'document'])
+        ->name('credit-applications.document');
+    Route::patch('/credit-applications/{application}/approve', [AdminCreditApplicationController::class, 'approve'])
+        ->name('credit-applications.approve');
+    Route::patch('/credit-applications/{application}/reject', [AdminCreditApplicationController::class, 'reject'])
+        ->name('credit-applications.reject');
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');

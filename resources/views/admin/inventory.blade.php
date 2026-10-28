@@ -19,6 +19,12 @@
     
     <form method="GET" action="{{ route('admin.inventory') }}" class="search-form">
         <input type="search" name="search" placeholder="Search products..." value="{{ request('search') }}">
+        <select name="category" onchange="this.form.submit()">
+            <option value="">All Categories</option>
+            @foreach ($categories as $category)
+                <option value="{{ $category->id }}" @selected(request('category') == $category->id)>{{ $category->name }}</option>
+            @endforeach
+        </select>
         <button type="submit" class="btn btn-dark">Search</button>
     </form>
 
@@ -80,11 +86,7 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
-
-    <div class="pagination-wrap">
         {{ $products->links() }}
     </div>
-
 </div>
 @endsection

@@ -18,7 +18,7 @@
     <section class="products-grid">
         @forelse ($products as $product)
             <a href="{{ route('products.show', $product) }}" class="product-card">
-                <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                <img src="{{ $product->image_url }}" alt="{{ $product->name }}" loading="lazy">
                 <h4>{{ $product->name }}</h4>
                 <p class="brand">{{ $product->brand }}</p>
                 <p class="price">&#8369;{{ number_format($product->price, 2) }}</p>
