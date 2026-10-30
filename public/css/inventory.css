@@ -49,15 +49,28 @@
 .search-form input {
     flex: 1;
     padding: 10px 14px;
-    border: 1px solid #ddd;
+    border: 1px solid #2563eb;
     border-radius: 8px;
     font-size: 0.9rem;
     outline: none;
     background: white;
 }
+.search-form select {
+    min-width: 205px;
+    padding: 10px 16px;
+    border: 1px solid #2563eb;
+    border-radius: 9px;
+    background: #fff;
+    color: #333;
+    font-size: 0.9rem;
+    outline: none;
+}
+.search-form select:focus {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
 .search-form input:focus {
-    border-color: #16a34a;
-    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 .table-card {
@@ -138,7 +151,63 @@
     color: #999;
     padding: 40px 0 !important;
 }
-.pagination-wrap { margin-top: 20px; }
+.pagination-wrap { 
+    margin-top: 20px;
+    padding: 18px 24px;
+    background: #f1f1f1;
+}
+.inventory-pagination {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.inventory-pagination a,
+.inventory-pagination span {
+    display: flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: 1px solid #d1d1d1;
+    border-radius: 6px;
+    background: #fff;
+    color: #222;
+    font-size: 1rem;
+    text-decoration: none;
+}
+.inventory-pagination a:hover {
+    background: #f8f8f8;
+}
+.inventory-pagination .is-current {
+    border-color: #a8d3e7;
+    background: #a8d3e7;
+    font-weight: 600;
+}
+.inventory-pagination .is-disabled {
+    background: #f7f7f7;
+    color: #aaa;
+}
+.admin-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+.admin-pagination-summary {
+    margin: 0;
+    color: #333;
+    font-size: 0.875rem;
+}
+.admin-pagination .inventory-pagination a,
+.admin-pagination .inventory-pagination span {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+}
 
 .search-form .btn-dark {
     background: #2563eb;
@@ -151,6 +220,8 @@
 /* Mobile*/
 @media (max-width: 768px) {
     .inventory-page { padding: 16px; }
+
+    .admin-pagination { flex-wrap: wrap; }
 
     .inventory-header { flex-direction: column; align-items: stretch; }
     .inventory-header .btn { text-align: center; }

@@ -4,7 +4,9 @@
     margin: 0 auto;
 }
 
-.users-header { margin-bottom: 20px; }
+.users-header {
+     margin-bottom: 20px; 
+    }
 .users-header h2 {
     margin: 0;
     font-size: 1.6rem;
@@ -32,8 +34,12 @@
     border-bottom: 1px solid #f0f0f0;
     vertical-align: middle;
 }
-.users-table tbody tr:last-child td { border-bottom: none; }
-.users-table tbody tr:hover { background: #fafafa; }
+.users-table tbody tr:last-child td {
+     border-bottom: none; 
+    }
+.users-table tbody tr:hover {
+     background: #fafafa; 
+    }
 
 .user-info {
     display: flex;
@@ -53,9 +59,15 @@
     font-size: 0.9rem;
     font-weight: 700;
 }
-.user-name { font-weight: 600; color: #111; }
-.user-email { font-size: 0.8rem; color: #888; }
-.user-date { color: #777; }
+.user-name {
+     font-weight: 600; color: #111; 
+    }
+.user-email {
+     font-size: 0.8rem; color: #888; 
+    }
+.user-date {
+     color: #777; 
+    }
 
 .role-badge {
     display: inline-block;
@@ -71,14 +83,22 @@
     color: #1d4ed8;
 }
 
-.users-table .actions-col { text-align: right; }
-.users-table .actions-col form { margin: 0; }
+.users-table .actions-col { 
+    text-align: right; 
+}
+.users-table .actions-col form {
+     margin: 0; 
+    }
 
 /* Mobile*/
 @media (max-width: 768px) {
-    .users-page { padding: 16px; }
+    .users-page {
+         padding: 16px; 
+        }
 
-    .users-table thead { display: none; }
+    .users-table thead {
+         display: none; 
+        }
     .users-table, .users-table tbody, .users-table tr, .users-table td {
         display: block;
         width: 100%;
@@ -101,5 +121,7 @@
         color: #888;
         text-transform: uppercase;
     }
-    .users-table .actions-col { justify-content: flex-end; }
+    .users-table .actions-col {
+         justify-content: flex-end; 
+        }
 }
