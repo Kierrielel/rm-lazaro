@@ -57,50 +57,57 @@
             <div class="cart-summary">
                 <h3>Order Summary</h3>
 
-                <div class="summary-row">
-                    <span>Delivery Address</span>
+                <div class="summary-row summary-address">
+                    <span class="summary-label">Delivery Address</span>
                     @if (auth()->user()->hasAddress())
-                    <span>{{ auth()->user()->full_address }}</span>
+                    <span class="summary-value">{{ auth()->user()->full_address }}</span>
                     @else
-                    <span>
-                    {{-- TODO 3: replace the # with a route() link once the edit page exists --}}
-                    <a href="#">Please add your address first before making an order</a>
-                    </span>
-                        @endif
+                        <span class="summary-value">
+                            {{-- TODO 3: replace the # with a route() link once the edit page exists --}}
+                            <a href="#">Please add your address first before making an order</a>
+                        </span>
+                    @endif
                 </div>
-                    
-                    <div class="summary-row">
-                        <span>Items</span>
-                        <span>{{ $items->sum('quantity') }}</span>
-                    </div>
-                    
-                    <div class="summary-row">
-                        <span>Payment Method</span>
-                </div>    
+
+                <div class="summary-row">
+                    <span>Items</span>
+                    <span>{{ $items->sum('quantity') }}</span>
+                </div>
 
                 <form action="{{ route('checkout.store') }}" method="POST">
                     @csrf
-                    <input type="radio" id="cod" name="payment_method" value="cod" required>
-                    <label for="cod">Cash on delivery (COD)</label><br>
+                    <fieldset class="payment-methods">
+                        <legend>Payment Method</legend>
 
-                    @if ($cart->subtotal >= 3000)
-                    <input type="radio" id="qrph" name="payment_method" value="qrph" disabled required>
-                    <label for="qrph">QRPh</label><br>
-                    @else 
-                    <input type="radio" id="qrph" name="payment_method" value="qrph" required>
-                    <label for="qrph">QRPh</label><br>
-                    @endif
-                    <input type="radio" id="gcash" name="payment_method" value="gcash" disabled required>
-                    <label for="gcash">Gcash</label><br>
-                    
-                    <input type="radio" id="maya" name="payment_method" value="maya" disabled required>
-                    <label for="maya">Maya</label><br>
-                    
-                    
+                        <label class="payment-option" for="cod">
+                            <input type="radio" id="cod" name="payment_method" value="cod" required>
+                            <span>Cash on delivery <small>COD</small></span>
+                        </label>
+
+                        <label class="payment-option" for="qrph">
+                            <input type="radio" id="qrph" name="payment_method" value="qrph" required>
+                            <span>QRPh</span>
+                        </label>
+
+                        <label class="payment-option payment-option-disabled" for="gcash">
+                            <input type="radio" id="gcash" name="payment_method" value="gcash" disabled required>
+                            <span>GCash <small>Unavailable</small></span>
+                        </label>
+
+                        <label class="payment-option payment-option-disabled" for="maya">
+                            <input type="radio" id="maya" name="payment_method" value="maya" disabled required>
+                            <span>Maya <small>Unavailable</small></span>
+                        </label>
+
+                        @if (auth()->user()->credit_approved)
+                            <label class="payment-option" for="paylater">
+                                <input type="radio" id="paylater" name="payment_method" value="paylater" required>
+                                <span>Pay later</span>
+                            </label>
+                        @endif
+                    </fieldset>
+
                     @if (auth()->user()->credit_approved)
-                    <input type="radio" id="paylater" name="payment_method" value="paylater" required>
-                    <label for="paylater">Pay later</label><br>
-
                     <div id="paylater-options"
                          hidden
                          data-order-date="{{ now()->toDateString() }}"
@@ -134,7 +141,7 @@
                             installment schedule shown above.
                         </label>
 
-                    </div>    
+                    </div>
 
                     @endif
                 
