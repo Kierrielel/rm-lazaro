@@ -55,10 +55,31 @@
                     @endif
 
                     <label for="quantity">Quantity</label>
-                    <input type="number" name="quantity" id="quantity" value="1" min="1"
-                           @if (!$product->hasVariants()) max="{{ $product->stock_quantity }}" @endif>
+                    <div class="qty-box product-qty-box">
+                        <button type="button" class="qty-btn" data-quantity-step="-1" aria-label="Decrease quantity">&minus;</button>
+                        <input class="qty-number product-qty-input" type="number" name="quantity" id="quantity" value="1" min="1" step="1"
+                               @if (!$product->hasVariants()) max="{{ $product->stock_quantity }}" @endif>
+                        <button type="button" class="qty-btn" data-quantity-step="1" aria-label="Increase quantity">+</button>
+                    </div>
                     <button type="submit">Add to Cart</button>
                 </form>
+
+                <script>
+                document.querySelectorAll('.product-qty-box').forEach(function (box) {
+                    const input = box.querySelector('input[name="quantity"]');
+
+                    box.querySelectorAll('[data-quantity-step]').forEach(function (button) {
+                        button.addEventListener('click', function () {
+                            const min = Number(input.min) || 1;
+                            const max = input.max ? Number(input.max) : Infinity;
+                            const next = (Number(input.value) || min) + Number(button.dataset.quantityStep);
+
+                            input.value = Math.min(max, Math.max(min, next));
+                            input.dispatchEvent(new Event('change', { bubbles: true }));
+                        });
+                    });
+                });
+                </script>
 
                 @if ($product->hasVariants())
                     <script>

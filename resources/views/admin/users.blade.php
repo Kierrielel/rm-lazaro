@@ -71,7 +71,7 @@
     </div>
 
     <div class="pagination-wrap">
-        {{ $users->links() }}
+        {{ $users->links('vendor.pagination.admin-compact') }}
     </div>
 
 </div>

@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="{{ asset('css/edit_product.css') }}">
     <link rel="stylesheet" href="{{ asset('css/order_details.css') }}">
     <link rel="stylesheet" href="{{ asset('css/alert.css') }}">
+    @if (request()->routeIs('admin.credit-applications.show'))
+        <link rel="stylesheet" href="{{ asset('css/show_application.css') }}?v={{ filemtime(public_path('css/show_application.css')) }}">
+    @endif
+    <link rel="stylesheet" href="{{ asset('css/admin_forms.css') }}">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search" />
 

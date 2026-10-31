@@ -80,7 +80,7 @@
                 @endforelse
             </tbody>
         </table>
-        {{ $lowStockProducts->links() }}
+                {{ $lowStockProducts->links('vendor.pagination.admin-compact') }}
     </div>
 </div>
 @endsection

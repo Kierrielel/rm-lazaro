@@ -264,6 +264,59 @@
     box-shadow: 0 0 0 3px rgba(43, 96, 186, 0.2);
 }
 
+.product-details .product-qty-box {
+    width: fit-content;
+    margin: 0 0 8px;
+}
+
+.product-details .product-qty-box .qty-btn {
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    color: #15387b;
+    font-size: 1.1em;
+    font-weight: bold;
+    line-height: 1;
+    box-shadow: none;
+}
+
+.product-details .product-qty-box .qty-btn:hover {
+    background: #ffb020;
+}
+
+.product-details .product-qty-box input.product-qty-input {
+    width: 30px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #1b2437;
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 32px;
+    box-shadow: none;
+}
+
+.product-details .product-qty-box:focus-within {
+    box-shadow: 0 0 0 2px rgba(43, 96, 186, 0.2);
+}
+
+.product-details .product-qty-box input.product-qty-input::-webkit-inner-spin-button,
+.product-details .product-qty-box input.product-qty-input::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
+
+.product-details .product-qty-box input.product-qty-input {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
 .product-details button {
     margin-top: 8px;
     padding: 14px 36px;
