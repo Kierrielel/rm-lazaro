@@ -5,11 +5,10 @@
 @section('content')
 <link rel="stylesheet" href="{{ asset('css/inventory.css') }}">
 <link rel="stylesheet" href="{{ asset('css/orders.css') }}">
-<link rel="stylesheet" href="{{ asset('css/order-details.css') }}">
+<link rel="stylesheet" href="{{ asset('css/order_details.css') }}">
 
 <div class="details-page">
 
-    {{-- Header --}}
     <a href="{{ route('admin.orders') }}" class="back-link">&larr; Back to orders</a>
 
     <div class="details-header">
@@ -19,9 +18,9 @@
         </span>
     </div>
 
-    <div class="details-layout">
+    <div class="details-layout {{ $order->payment_method === 'paylater' ? 'details-layout-paylater' : '' }}">
 
-        {{-- Left: items --}}
+
         <div class="table-card details-items">
             <div class="card-title">Items</div>
 

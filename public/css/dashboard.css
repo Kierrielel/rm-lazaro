@@ -164,6 +164,15 @@ html body {
     border-radius: 12px;
 }
 
+.dashboard-page > .table-card + .table-card {
+    margin-top: 30px;
+}
+
+.dashboard-page .admin-pagination {
+    padding: 16px 22px;
+    border-top: 1px solid #ddd;
+}
+
 .table-card h3 {
     padding: 18px 22px;
     font-size: 1.05em;
