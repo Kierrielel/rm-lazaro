@@ -16,7 +16,7 @@
 
         <form method="GET" action="{{ route('admin.orders') }}" class="filter-form">
             <select name="status" onchange="this.form.submit()">
-                <option value="">All statuses</option>
+                <option value="">All Statuses</option>
                 @foreach (['pending', 'processing', 'completed', 'cancelled'] as $status)
                     <option value="{{ $status }}" @selected(request('status') === $status)>{{ ucfirst($status) }}</option>
                 @endforeach
@@ -67,7 +67,7 @@
     </div>
 
     <div class="pagination-wrap">
-        {{ $orders->links() }}
+        {{ $orders->links('vendor.pagination.admin-compact') }}
     </div>
 
 </div>

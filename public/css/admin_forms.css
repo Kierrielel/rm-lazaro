@@ -1,0 +1,14 @@
+
+.main-content input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+.main-content select,
+.main-content textarea {
+    border-color: #024ea0 !important;
+}
+
+.main-content input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):focus,
+.main-content select:focus,
+.main-content textarea:focus {
+    border-color: #024ea0 !important;
+    box-shadow: 0 0 0 3px rgba(2, 78, 160, 0.15) !important;
+}
+
