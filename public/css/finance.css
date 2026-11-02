@@ -4,6 +4,19 @@
     margin: 0 auto;
 }
 
+.finance-filters { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; padding: 18px; margin-bottom: 12px; border: 1px solid #dfe5ee; border-radius: 12px; background: #fff; }
+.finance-date-field { display: flex; flex-direction: column; gap: 7px; flex: 1 1 160px; }
+.finance-date-field label { color: #536177; font-size: 0.8rem; font-weight: 600; }
+.finance-date-field input { padding: 10px 12px; min-height: 42px; box-sizing: border-box; width: 100%; border: 1px solid #d5dce6; border-radius: 8px; font: inherit; }
+.finance-date-field input:focus { outline: 2px solid #2459b8; outline-offset: 2px; }
+.finance-filter-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.finance-filter-actions .btn { min-height: 42px; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.finance-apply { background: #173d7a; color: white; }
+.finance-export { background: #e7f4ed; color: #11653f; }
+.finance-reset { background: #eff2f6; color: #526077; }
+.finance-period { font-size: 0.85rem; color: #62718a; margin: 0 0 20px; line-height: 1.6; }
+.finance-table tfoot { background: #f1f5fa; }
+
 .finance-page .finance-header { 
     margin-bottom: 20px; 
 }

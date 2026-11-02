@@ -18,6 +18,7 @@
                 <option value="pending" @selected($status === 'pending')>Pending</option>
                 <option value="approved" @selected($status === 'approved')>Approved</option>
                 <option value="rejected" @selected($status === 'rejected')>Rejected</option>
+                <option value="revoked" @selected($status === 'revoked')>Revoked</option>
             </select>
         </form>
     </div>
@@ -42,8 +43,8 @@
                         <td data-label="Applicant" class="credit-applicant-name">{{ $applicantName ?: 'Name not provided' }}</td>
                         <td data-label="Username">{{ $application->user->username }}</td>
                         <td data-label="Status">
-                            <span class="credit-application-status credit-status-{{ strtolower($application->status) }}">
-                                {{ ucfirst($application->status) }}
+                            <span class="credit-application-status credit-status-{{ $application->display_status }}">
+                                {{ ucfirst($application->display_status) }}
                             </span>
                         </td>
                         <td data-label="Submitted" class="order-date">{{ $application->created_at->format('M d, Y') }}</td>

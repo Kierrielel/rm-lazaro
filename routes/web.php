@@ -1,17 +1,18 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CreditApplicationController as AdminCreditApplicationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FinanceController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
-use App\Http\Controllers\Admin\CreditApplicationController as AdminCreditApplicationController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\CreditApplicationController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CreditApplicationController;
+use App\Http\Controllers\PayLaterPaymentController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,18 +41,22 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:5,1')
         ->name('credit.apply.store');
     Route::get('/paylater/payment-attempts/{reference}/status', [
-        \App\Http\Controllers\PayLaterPaymentController::class,
+        PayLaterPaymentController::class,
         'status',
     ])
         ->middleware('throttle:30,1')
         ->name('paylater.payment-attempts.status');
-    Route::post('/paylater/payment-attempts', [\App\Http\Controllers\PayLaterPaymentController::class, 'store'])
+    Route::post('/paylater/payment-attempts', [PayLaterPaymentController::class, 'store'])
         ->middleware('throttle:10,1')
         ->name('paylater.payment-attempts.store');
+    Route::post('/paylater/payment-attempts/{reference}/checkout', [PayLaterPaymentController::class, 'resume'])
+        ->middleware('throttle:10,1')
+        ->name('paylater.payment-attempts.resume');
     Route::get('/paylater/payment-attempts/{reference}', [
-        \App\Http\Controllers\PayLaterPaymentController::class,
+        PayLaterPaymentController::class,
         'show',
     ])
+        ->middleware('throttle:30,1')
         ->name('paylater.payment-attempts.show');
 
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
@@ -84,6 +89,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         ->name('credit-applications.approve');
     Route::patch('/credit-applications/{application}/reject', [AdminCreditApplicationController::class, 'reject'])
         ->name('credit-applications.reject');
+    Route::patch('/credit-applications/{application}/revoke', [AdminCreditApplicationController::class, 'revoke'])
+        ->middleware('throttle:10,1')->name('credit-applications.revoke');
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
@@ -91,10 +98,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('/users', [UserController::class, 'index'])->name('users');
     Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::patch('/users/{user}/archive', [UserController::class, 'archive'])->name('users.archive');
+    Route::patch('/users/{user}/restore', [UserController::class, 'restore'])->name('users.restore');
 
     Route::get('/finance', [FinanceController::class, 'index'])->name('finance');
+    Route::get('/finance/export/{format}', [FinanceController::class, 'export'])
+        ->whereIn('format', ['pdf', 'xlsx'])->name('finance.export');
 
     Route::get('/settings', [SettingsController::class, 'edit'])->name('settings');
-    Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    Route::put('/settings', [SettingsController::class, 'update'])->middleware('throttle:10,1')->name('settings.update');
+    Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->middleware('throttle:5,1')->name('settings.password');
+    Route::put('/settings/store', [SettingsController::class, 'updateStore'])->middleware('throttle:10,1')->name('settings.store');
 });

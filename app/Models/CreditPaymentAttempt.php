@@ -16,6 +16,10 @@ class CreditPaymentAttempt extends Model
         'currency',
         'status',
         'paymongo_payment_intent_id',
+        'paymongo_checkout_session_id',
+        'checkout_url',
+        'paymongo_payment_id',
+        'last_checked_at',
         'expires_at',
         'paid_at',
     ];
@@ -24,6 +28,7 @@ class CreditPaymentAttempt extends Model
         'amount_cents' => 'integer',
         'expires_at' => 'datetime',
         'paid_at' => 'datetime',
+        'last_checked_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

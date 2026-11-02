@@ -14,16 +14,36 @@
             <p class="subtitle">Track and manage customer orders.</p>
         </div>
 
-        <form method="GET" action="{{ route('admin.orders') }}" class="filter-form">
-            <select name="status" onchange="this.form.submit()">
-                <option value="">All Statuses</option>
-                @foreach (['pending', 'processing', 'completed', 'cancelled'] as $status)
-                    <option value="{{ $status }}" @selected(request('status') === $status)>{{ ucfirst($status) }}</option>
-                @endforeach
-            </select>
+        <form method="GET" action="{{ route('admin.orders') }}" class="filter-form orders-filter-form" role="search" aria-label="Search and filter orders">
+            <div class="orders-filter-field orders-search-field">
+                <label for="order-search">Search orders</label>
+                <input type="search" id="order-search" name="search" maxlength="100" value="{{ $search }}" placeholder="Order #, customer, email or phone">
+            </div>
+            <div class="orders-filter-field">
+                <label for="order-status">Status</label>
+                <select id="order-status" name="status">
+                    <option value="">All statuses</option>
+                    @foreach (['pending', 'processing', 'completed', 'cancelled'] as $status)
+                        <option value="{{ $status }}" @selected($selectedStatus === $status)>{{ ucfirst($status) }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="orders-filter-field">
+                <label for="order-sort">Sort by</label>
+                <select id="order-sort" name="sort">
+                    @foreach ($sortOptions as $value => $label)
+                        <option value="{{ $value }}" @selected($sort === $value)>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="orders-filter-actions">
+                <button type="submit" class="btn btn-blue">Apply</button>
+                <a href="{{ route('admin.orders') }}" class="btn orders-reset">Reset</a>
+            </div>
         </form>
     </div>
 
+    <p class="orders-result-summary" role="status">{{ number_format($orders->total()) }} {{ $orders->total() === 1 ? 'order' : 'orders' }} found</p>
     <div class="table-card">
         <table class="order-table">
             <thead>
@@ -59,7 +79,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="empty-row">No orders found.</td>
+                        <td colspan="6" class="empty-row">No orders match your search or filters.</td>
                     </tr>
                 @endforelse
             </tbody>

@@ -7,8 +7,16 @@
 
 <div class="paylater-page">
 
+    @if (!$user->credit_approved && $revokedApplication)
+        <div class="notice notice-red" role="status">
+            <p><strong>Your Pay Later access has been revoked.</strong></p>
+            <p>Reason: {{ $revokedApplication->revocation_reason }}</p>
+            <p>New Pay Later orders are blocked. You can still view and pay existing installments.</p>
+        </div>
+    @endif
+
     <div class="page-head">
-        @if ($user->credit_approved)
+        @if ($hasCreditAccount)
             <h1>Pay Later</h1>
             <p>Track your credit and pay your monthly balance.</p>
         @else
@@ -17,7 +25,22 @@
         @endif
     </div>
 
-    @if ($user->credit_approved)
+    @if (!$hasCreditAccount && $paymentAttempts->isNotEmpty())
+        <section class="card">
+            <h2>Recent payments</h2>
+            <ul>
+                @foreach ($paymentAttempts as $paymentAttempt)
+                    <li><a href="{{ route('paylater.payment-attempts.show', $paymentAttempt->reference) }}">
+                        {{ $paymentAttempt->created_at->format('M j, Y g:i A') }}
+                        &mdash; &#8369;{{ number_format($paymentAttempt->amount_cents / 100, 2) }}
+                        &mdash; {{ ucfirst($paymentAttempt->status) }}
+                    </a></li>
+                @endforeach
+            </ul>
+        </section>
+    @endif
+
+    @if ($hasCreditAccount)
     {{-- TODO: Change to view order's installments, due dates, remaining balances, and payment options. --}}
         @php
             $ordersDueThisMonth = $orders->filter(fn ($order) =>
@@ -31,7 +54,7 @@
         <div class="stat-grid">
             <div class="stat">
                 <span class="stat-label">Available credit</span>
-                <strong class="stat-value stat-blue">₱{{ number_format((float) $user->credit_limit-$user->unpaidCreditBalance(), 2) }}</strong>
+                <strong class="stat-value stat-blue">₱{{ number_format($availableCredit, 2) }}</strong>
             </div>
 
             <div class="stat">
@@ -50,7 +73,11 @@
             </div>
         </div>
 
-        @if ($user->credit_on_hold || $user->monthlyPayableAmount() > 0 && !$openPaymentAttempt)
+        @error('payment')
+            <p class="notice" role="alert">{{ $message }}</p>
+        @enderror
+
+        @if (($user->credit_on_hold || $user->monthlyPayableAmount() > 0) && !$openPaymentAttempt)
             <section class="card">
                 <div class="card-head">
                     <span class="card-icon">
@@ -58,7 +85,7 @@
                     </span>
                     <div>
                         <h2>Make a payment</h2>
-                        <p>Choose how you want to pay.</p>
+                        <p>Continue to PayMongo checkout to pay with QR Ph.</p>
                     </div>
                 </div>
 
@@ -74,32 +101,39 @@
                         <label for="paylater-method">Payment method</label>
                         <select id="paylater-method" name="method" required>
                             <option value="qrph">QR Ph</option>
-                            <option value="gcash" disabled>GCash</option>
-                            <option value="paymaya" disabled>Maya</option>
                         </select>
                     </div>
 
                     <button id="paylater-submit" type="submit" class="btn-orange">Pay now</button>
                 </form>
 
-                <div id="paylater-payment-result" aria-live="polite">
-                    <p id="paylater-payment-status"></p>
-                    <img id="paylater-qr-image" alt="PayMongo QR Ph payment code" hidden>
-                </div>
             </section>
         @endif
 
         @if ($openPaymentAttempt)
             <div class="notice notice-blue">
-                @if ($openPaymentAttempt->status === 'pending' && $openPaymentAttempt->paymongo_payment_intent_id)
-                    <p>You have a Pay Later payment in progress.</p>
-                    <a href="{{ route('paylater.payment-attempts.show', $openPaymentAttempt->reference) }}">
-                        Return to your payment
-                    </a>
-                @else
-                    <p>Your payment is being set up. Refresh this page shortly.</p>
-                @endif
+                <p>You have a saved Pay Later payment. Check its status before starting another payment.</p>
+                <a href="{{ route('paylater.payment-attempts.show', $openPaymentAttempt->reference) }}">
+                    Check or continue payment
+                </a>
             </div>
+        @endif
+
+        @if ($paymentAttempts->isNotEmpty())
+            <section class="card">
+                <h2>Recent payments</h2>
+                <ul>
+                    @foreach ($paymentAttempts as $paymentAttempt)
+                        <li>
+                            <a href="{{ route('paylater.payment-attempts.show', $paymentAttempt->reference) }}">
+                                {{ $paymentAttempt->created_at->format('M j, Y g:i A') }}
+                                &mdash; &#8369;{{ number_format($paymentAttempt->amount_cents / 100, 2) }}
+                                &mdash; {{ ucfirst($paymentAttempt->status) }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </section>
         @endif
 
         <h2 class="section-title">Items to Pay</h2>
@@ -614,221 +648,6 @@ fetch('/data/bulacan-address.json')
     });
 </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('paylater-payment-form');
 
-    if (!form) {
-        return;
-    }
-
-    const methodSelect = document.getElementById('paylater-method');
-    const submitButton = document.getElementById('paylater-submit');
-    const statusText = document.getElementById('paylater-payment-status');
-    const qrImage = document.getElementById('paylater-qr-image');
-
-    const createAttemptUrl = @json(route('paylater.payment-attempts.store'));
-    const statusUrlTemplate = @json(route(
-        'paylater.payment-attempts.status',
-        ['reference' => '__REFERENCE__']
-    ));
-    const paymentPageUrlTemplate = @json(route(
-        'paylater.payment-attempts.show',
-        ['reference' => '__REFERENCE__']
-    ));
-
-    function paymentPageUrl(reference) {
-        return paymentPageUrlTemplate.replace(
-            '__REFERENCE__',
-            encodeURIComponent(reference)
-        );
-    }
-
-    async function readJson(response) {
-        const data = await response.json();
-
-        if (!response.ok) {
-            const validationMessage = data.errors
-                ? Object.values(data.errors).flat()[0]
-                : null;
-
-            throw new Error(data.message || validationMessage || 'Payment request failed.');
-        }
-
-        return data;
-    }
-
-    function removeAttemptFromUrl() {
-        const url = new URL(window.location.href);
-        url.searchParams.delete('paylater_attempt');
-        window.history.replaceState({}, '', url);
-    }
-
-    async function pollPaymentStatus(reference) {
-        const statusUrl = statusUrlTemplate.replace(
-            '__REFERENCE__',
-            encodeURIComponent(reference)
-        );
-
-        statusText.textContent = 'Waiting for payment confirmation…';
-
-        while (true) {
-            const response = await fetch(statusUrl, {
-                headers: { 'Accept': 'application/json' },
-                credentials: 'same-origin',
-            });
-
-            const data = await response.json();
-
-            if (data.status === 'succeeded') {
-                statusText.textContent = 'Payment confirmed. Updating your balance…';
-                removeAttemptFromUrl();
-                window.setTimeout(() => window.location.reload(), 1200);
-                return;
-            }
-
-            if (data.status === 'failed') {
-                statusText.textContent = 'Payment was not completed. You can start another attempt.';
-                removeAttemptFromUrl();
-                submitButton.disabled = false;
-                return;
-            }
-
-            if (data.status === 'review') {
-                statusText.textContent = 'Payment needs review. Please contact the store.';
-                return;
-            }
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Could not check payment status.');
-            }
-
-            await new Promise(resolve => window.setTimeout(resolve, 5000));
-        }
-    }
-
-    form.addEventListener('submit', async event => {
-        event.preventDefault();
-        submitButton.disabled = true;
-        statusText.textContent = 'Starting payment…';
-        qrImage.hidden = true;
-
-        let reference = null;
-
-        try {
-            // Ask Laravel to calculate the amount and create the Payment Intent.
-            const attemptResponse = await fetch(createAttemptUrl, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': form.querySelector('[name="_token"]').value,
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify({ method: methodSelect.value }),
-            });
-
-            const attempt = await readJson(attemptResponse);
-            reference = attempt.reference;
-
-            const paymentUrl = paymentPageUrl(reference);
-            const returnUrl = new URL(paymentUrl, window.location.origin);
-
-
-            // Create a PayMongo payment method with the browser-safe public key.
-            const methodResponse = await fetch('https://api.paymongo.com/v1/payment_methods', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Basic ' + btoa(attempt.public_key + ':'),
-                },
-                body: JSON.stringify({
-                    data: {
-                        attributes: { type: attempt.method },
-                    },
-                }),
-            });
-
-            const paymentMethodData = await readJson(methodResponse);
-            const paymentMethodId = paymentMethodData.data.id;
-
-            // Attach the method to the intent using its short-lived client key.
-            const attachResponse = await fetch(
-                `https://api.paymongo.com/v1/payment_intents/${encodeURIComponent(attempt.payment_intent_id)}/attach`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Basic ' + btoa(attempt.public_key + ':'),
-                    },
-                    body: JSON.stringify({
-                        data: {
-                            attributes: {
-                                payment_method: paymentMethodId,
-                                client_key: attempt.client_key,
-                                return_url: returnUrl.toString(),
-                            },
-                        },
-                    })
-                }
-            );
-
-            const attached = await readJson(attachResponse);
-            const nextAction = attached.data.attributes.next_action;
-
-            // Wallets send the customer to GCash or Maya.
-            if (attempt.method === 'gcash' || attempt.method === 'paymaya') {
-                const redirectUrl = nextAction?.redirect?.url;
-
-                if (!redirectUrl) {
-                    throw new Error('PayMongo did not return a wallet redirect URL.');
-                }
-
-                window.location.assign(redirectUrl);
-                return;
-            }
-
-            // QR Ph returns an image for the customer to scan.
-            const imageUrl = nextAction?.code?.image_url;
-
-            if (!imageUrl) {
-                throw new Error('PayMongo did not return a QR image.');
-            }
-
-            qrImage.src = imageUrl;
-            qrImage.hidden = false;
-
-            window.location.assign(paymentUrl);
-            return;
-        } catch (error) {
-            statusText.textContent = error.message || 'Could not start the payment.';
-
-            // If Laravel created an attempt but the browser step failed,
-            // ask the server to check it before allowing another attempt.
-            if (reference) {
-                try {
-                    await pollPaymentStatus(reference);
-                } catch {
-                    statusText.textContent += ' Refresh this page to check it again.';
-                }
-            } else {
-                submitButton.disabled = false;
-            }
-        }
-    });
-
-    const returnedAttempt = new URLSearchParams(window.location.search)
-        .get('paylater_attempt');
-
-    if (returnedAttempt) {
-        submitButton.disabled = true;
-        pollPaymentStatus(returnedAttempt).catch(error => {
-            statusText.textContent = error.message || 'Could not check payment status.';
-        });
-    }
-});
-</script>
 
 @endsection

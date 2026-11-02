@@ -6,6 +6,7 @@
 
 .orders-header {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: 12px;
@@ -32,6 +33,18 @@
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
+
+.orders-page .orders-filter-form { display: flex; flex: 1 1 100%; align-items: flex-end; flex-wrap: wrap; gap: 12px; padding: 16px; background: #fff; border: 1px solid #e1e6ee; border-radius: 12px; }
+.orders-filter-field { display: flex; flex: 1 1 160px; flex-direction: column; gap: 7px; min-width: 0; }
+.orders-search-field { flex: 2 1 280px; }
+.orders-filter-field label { color: #536177; font-size: 0.8rem; font-weight: 600; }
+.orders-filter-field input, .orders-filter-field select { box-sizing: border-box; width: 100%; min-height: 42px; }
+.orders-filter-field input { padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font: inherit; font-size: 0.9rem; }
+.orders-filter-field input:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); }
+.orders-filter-actions { display: flex; gap: 8px; align-items: center; min-height: 42px; }
+.orders-filter-actions .btn { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; }
+.orders-filter-actions .orders-reset { background: #f0f2f5; color: #46556c; text-decoration: none; }
+.orders-result-summary { margin: 0 0 12px; color: #62718a; font-size: 0.85rem; }
 
 .order-table {
     width: 100%;

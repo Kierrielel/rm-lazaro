@@ -10,10 +10,16 @@
 
     <div class="users-header">
         <h2>Users</h2>
-        <p class="subtitle">View and manage registered accounts.</p>
+        <p class="subtitle">Manage active and archived accounts. Archiving preserves order and payment history.</p>
     </div>
 
     <form method="GET" action="{{ route('admin.users') }}" class="search-form">
+        <label for="account-status">Accounts</label>
+        <select id="account-status" name="status">
+            <option value="active" @selected($accountStatus === 'active')>Active</option>
+            <option value="archived" @selected($accountStatus === 'archived')>Archived</option>
+            <option value="all" @selected($accountStatus === 'all')>All accounts</option>
+        </select>
         <input type="search" name="search" placeholder="Search by username or email" value="{{ request('search') }}">
         <button type="submit" class="btn btn-dark">Search</button>
     </form>
@@ -25,6 +31,7 @@
                     <th>User</th>
                     <th>Phone</th>
                     <th>Role</th>
+                    <th>Status</th>
                     <th>Joined</th>
                     <th class="actions-col">Actions</th>
                 </tr>
@@ -48,22 +55,40 @@
                             <span class="role-badge role-{{ strtolower($user->role) }}">{{ ucfirst($user->role) }}</span>
                         </td>
 
+                        <td data-label="Status">
+                            <span class="role-badge account-status-{{ $user->archived_at ? 'archived' : 'active' }}">
+                                {{ $user->archived_at ? 'Archived' : 'Active' }}
+                            </span>
+                            @if ($user->archived_at)
+                                <div class="user-date">{{ $user->archived_at->format('M d, Y') }}</div>
+                            @endif
+                        </td>
+
                         <td data-label="Joined" class="user-date">{{ $user->created_at?->format('M d, Y') }}</td>
 
                         <td data-label="Actions" class="actions-col">
                             @if ($user->role !== 'admin')
-                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
-                                      onsubmit="return confirm('Delete this user?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
+                                @if ($user->archived_at)
+                                    <form action="{{ route('admin.users.restore', $user) }}" method="POST"
+                                          onsubmit="return confirm('Restore this account and allow the user to sign in again?');">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-dark">Restore</button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('admin.users.archive', $user) }}" method="POST"
+                                          onsubmit="return confirm('Archive this account? The user will be signed out and blocked from signing in. Their records will be preserved.');">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-danger">Archive</button>
+                                    </form>
+                                @endif
                             @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="empty-row">No users found.</td>
+                        <td colspan="6" class="empty-row">No users found.</td>
                     </tr>
                 @endforelse
             </tbody>
