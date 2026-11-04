@@ -78,6 +78,11 @@
     top: 20px;
 }
 
+.status-revoked { background: #fff0d6; color: #92400e; }
+.review-card.review-revoke-card { border: 1px solid #f0c1bd; }
+.review-revoke-card > p { color: #6b4650; font-size: 0.85rem; line-height: 1.6; margin-bottom: 16px; }
+.revocation-error { color: #b42318; font-size: 0.8rem; }
+
 .review-card {
     background: var(--bg);
     border: 1px solid var(--border);

@@ -23,7 +23,7 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        $throttleKey = Str::lower($credentials['login_id']) . '|' . $request->ip();
+        $throttleKey = Str::lower($credentials['login_id']).'|'.$request->ip();
 
         if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
             $seconds = RateLimiter::availableIn($throttleKey);
@@ -38,7 +38,7 @@ class AuthController extends Controller
             ->orWhere('phone_no', $credentials['login_id'])
             ->first();
 
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+        if (! $user || $user->archived_at !== null || ! Hash::check($credentials['password'], $user->password)) {
             RateLimiter::hit($throttleKey, 60);
 
             return back()->withErrors(['login_id' => 'Invalid username/email/phone or password.'])->withInput();

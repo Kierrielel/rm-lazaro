@@ -4,6 +4,12 @@
     margin: 0 auto;
 }
 
+.users-page .search-form { flex-wrap: wrap; align-items: center; }
+.users-page .search-form label { font-size: 0.85rem; color: #556275; }
+.users-page .search-form select { padding: 10px 12px; border: 1px solid #d5dce6; border-radius: 8px; background: #fff; color: #26364d; }
+.users-page .account-status-active { background: #dcfce7; color: #166534; }
+.users-page .account-status-archived { background: #fff0d6; color: #92400e; }
+
 .users-header {
      margin-bottom: 20px; 
     }

@@ -20,7 +20,7 @@
             <h1>Review Credit Application</h1>
             <p class="review-subtitle">Check the applicant's details and documents, then approve or reject.</p>
         </div>
-        <span class="status-badge status-{{ $application->status }}">{{ ucfirst($application->status) }}</span>
+        <span class="status-badge status-{{ $application->display_status }}">{{ ucfirst($application->display_status) }}</span>
     </div>
 
     <div class="review-grid">
@@ -89,12 +89,35 @@
                 <section class="review-card">
                     <h2>Review result</h2>
                     <dl class="result-list">
-                        <div class="detail"><dt>Status</dt><dd>{{ ucfirst($application->status) }}</dd></div>
+                        <div class="detail"><dt>Status</dt><dd>{{ ucfirst($application->display_status) }}</dd></div>
                         <div class="detail"><dt>Reviewed on</dt><dd>{{ $application->reviewed_at?->format('M j, Y g:i A') ?? 'an unknown date' }}</dd></div>
                     </dl>
                     @if ($application->rejection_reason)
                         <div class="reason-box"><span>Rejection reason</span><p>{{ $application->rejection_reason }}</p></div>
                     @endif
+                    @if ($application->revoked_at)
+                        <dl class="result-list">
+                            <div class="detail"><dt>Revoked on</dt><dd>{{ $application->revoked_at->format('M j, Y g:i A') }}</dd></div>
+                            <div class="detail"><dt>Revoked by</dt><dd>{{ $application->revokedBy?->username ?? 'Former admin' }}</dd></div>
+                        </dl>
+                        <div class="reason-box"><span>Revocation reason</span><p>{{ $application->revocation_reason }}</p></div>
+                    @endif
+                </section>
+            @endif
+
+            @if ($canRevoke)
+                <section class="review-card review-revoke-card">
+                    <h2>Revoke Pay Later access</h2>
+                    <p>Block new Pay Later orders. Existing balances and repayment schedules remain due, and the customer can continue making payments.</p>
+                    <form method="POST" action="{{ route('admin.credit-applications.revoke', $application) }}" class="review-form"
+                          onsubmit="return confirm('Revoke this customer\'s Pay Later access? Existing balances must still be repaid.');">
+                        @csrf
+                        @method('PATCH')
+                        <label for="revocation_reason">Reason for revocation</label>
+                        <textarea id="revocation_reason" name="revocation_reason" rows="4" maxlength="2000" required>{{ old('revocation_reason') }}</textarea>
+                        @error('revocation_reason') <p class="revocation-error">{{ $message }}</p> @enderror
+                        <button type="submit" class="btn btn-reject">Revoke Pay Later access</button>
+                    </form>
                 </section>
             @endif
         </aside>

@@ -30,7 +30,7 @@
             <div class="banner-leftside">
                 <div class="logo"><img src="{{ asset('images/logo.png') }}" alt="logo" height="50px" width="50px"></div>
                 <div class="banner-text">
-                    <div class="text-1"><h4>RM LAZARO ENTERPRISES</h4></div>
+                <div class="text-1"><h4>{{ $storeSettings->store_name }}</h4></div>
                     <div class="text-2"><h4>HARDWARE</h4></div>
                 </div>
             </div>

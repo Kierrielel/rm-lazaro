@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\PayLaterPayments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -9,27 +10,46 @@ use Throwable;
 
 class CreditApplicationController extends Controller
 {
-    public function create(Request $request)
+    public function create(Request $request, PayLaterPayments $payments)
     {
         $user = $request->user();
         $user->refreshCreditHold();
 
         $openPaymentAttempt = $user->creditPaymentAttempts()
-            ->whereIn('status', ['creating', 'pending'])
+            ->whereIn('status', ['creating', 'pending', 'review'])
             ->latest('id')
             ->first();
+        if ($openPaymentAttempt) {
+            try {
+                $openPaymentAttempt = $payments->sync($openPaymentAttempt);
+            } catch (Throwable) {
+                // Keep the saved attempt available when the provider cannot be reached.
+            }
+            if (in_array($openPaymentAttempt->status, ['succeeded', 'failed'], true)) {
+                $openPaymentAttempt = null;
+            }
+            $user->refresh();
+        }
         $orders = $user->orders()
             ->where('payment_method', 'paylater')
             ->where('order_status', '!=', 'cancelled')
             ->with(['items.product', 'items.variant', 'installments.payments'])
             ->orderByDesc('order_date')
             ->get();
+        $outstandingBalance = $user->unpaidCreditBalance();
+        $hasCreditAccount = $user->credit_approved || $outstandingBalance > 0 || $openPaymentAttempt !== null;
+        $availableCredit = $user->credit_approved ? max(0, (float) $user->credit_limit - $outstandingBalance) : 0;
+        $revokedApplication = $user->creditApplications()->whereNotNull('revoked_at')->orderByDesc('revoked_at')->latest('id')->first();
 
         return view('customer.credit_apply', [
             'user' => $user,
             'application' => $user->latestCreditApplication,
             'openPaymentAttempt' => $openPaymentAttempt,
+            'paymentAttempts' => $user->creditPaymentAttempts()->latest('id')->limit(10)->get(),
             'orders' => $orders,
+            'hasCreditAccount' => $hasCreditAccount,
+            'availableCredit' => $availableCredit,
+            'revokedApplication' => $revokedApplication,
         ]);
     }
 
@@ -121,7 +141,7 @@ class CreditApplicationController extends Controller
                 ->withErrors(['application' => 'The application could not be saved. Please try again.']);
         }
 
-        if (!$saved) {
+        if (! $saved) {
             Storage::disk('local')->delete([$idPhotoPath, $selfiePhotoPath]);
 
             return back()->withInput()

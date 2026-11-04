@@ -26,11 +26,22 @@ class CreditApplication extends Model
     protected $casts = [
         'monthly_income' => 'decimal:2',
         'reviewed_at' => 'datetime',
+        'revoked_at' => 'datetime',
         'terms_accepted_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function revokedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'revoked_by');
+    }
+
+    public function getDisplayStatusAttribute(): string
+    {
+        return $this->revoked_at !== null ? 'revoked' : $this->status;
     }
 }

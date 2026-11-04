@@ -31,7 +31,7 @@
 
             <div class="banner-text">
                 <div class="text-1">
-                    <h2>RM LAZARO ENTERPRISES</h2>
+                    <h2>{{ $storeSettings->store_name }}</h2>
                 </div>
                 <div class="text-2">
                     <h2>HARDWARE</h2>
@@ -126,14 +126,17 @@
         <div class="store-info-section">
             <div class="store-info-card">
                 <h3>Visit Our Store</h3>
-                <p>4XPH+86P, Magsaysay Rd, San Miguel, Bulacan</p>
-                <p>Monday - Saturday: 7:00 AM - 5:00 PM</p>
-                <p>Contact: 0917 982 8985</p>
+                <p>{{ $storeSettings->store_address }}</p>
+                <p>{{ $storeSettings->opening_hours }}</p>
+                <p>Contact: {{ $storeSettings->contact_phone }}</p>
+                @if ($storeSettings->contact_email)
+                    <p>Email: {{ $storeSettings->contact_email }}</p>
+                @endif
             </div>
         </div>
 
         <div id="footer-container">
-            <p>&copy; {{ date('Y') }} RM LAZARO ENTERPRISES HARDWARE. All Rights Reserved.</p>
+            <p>&copy; {{ date('Y') }} {{ $storeSettings->store_name }}. All Rights Reserved.</p>
         </div>
     </footer>
     @endif

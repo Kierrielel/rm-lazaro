@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-//use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -34,22 +34,23 @@ class User extends Authenticatable
 
     public function hasAddress(): bool
     {
-        return !empty($this->province)
+        return ! empty($this->province)
             && $this->province !== 'No Address'
-            && !empty($this->city)
-            && !empty($this->barangay);
+            && ! empty($this->city)
+            && ! empty($this->barangay);
     }
 
     public function getFullAddressAttribute(): string
     {
         return collect([$this->unit, $this->barangay, $this->city, $this->province])
-            ->filter(fn($part) => filled($part) && $part !== 'No Address' && strtolower($part) !== 'n/a')
+            ->filter(fn ($part) => filled($part) && $part !== 'No Address' && strtolower($part) !== 'n/a')
             ->implode(', ');
     }
 
     protected $hidden = ['password', 'remember_token'];
 
     protected $casts = [
+        'archived_at' => 'datetime',
         'created_at' => 'datetime',
         'credit_approved' => 'boolean',
         'credit_on_hold' => 'boolean',
@@ -82,8 +83,8 @@ class User extends Authenticatable
             ->where('payment_method', 'paylater')
             ->where('order_status', '!=', 'cancelled')
             ->get()
-            ->filter(fn(Order $order) => !$order->is_fully_paid)
-            ->sum(fn(Order $order) => $order->balance);
+            ->filter(fn (Order $order) => ! $order->is_fully_paid)
+            ->sum(fn (Order $order) => $order->balance);
     }
 
     public function hasOverdueCredit(): bool
@@ -133,7 +134,7 @@ class User extends Authenticatable
     public function canUseCredit(float $amount): bool
     {
         if (
-            !$this->credit_approved
+            ! $this->credit_approved
             || $this->hasOverdueCredit()
             || $this->credit_limit === null
             || $this->credit_on_hold === true
@@ -141,6 +142,7 @@ class User extends Authenticatable
         ) {
             return false;
         }
+
         return $this->unpaidCreditBalance() + $amount <= (float) $this->credit_limit;
     }
 
@@ -149,7 +151,7 @@ class User extends Authenticatable
         return CreditInstallment::query()
             ->whereHas(
                 'order',
-                fn($query) => $query
+                fn ($query) => $query
                     ->where('user_id', $this->id)
                     ->where('payment_method', 'paylater')
                     ->where('order_status', '!=', 'cancelled')
@@ -160,7 +162,7 @@ class User extends Authenticatable
             ])
             ->with('payments')
             ->get()
-            ->sum(fn(CreditInstallment $installment) => $installment->balance);
+            ->sum(fn (CreditInstallment $installment) => $installment->balance);
     }
 
     public function creditApplications(): HasMany
