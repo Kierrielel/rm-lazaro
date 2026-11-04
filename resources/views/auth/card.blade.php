@@ -87,6 +87,7 @@
             <div class="field">
                 <label for="username">Username</label>
                 <input type="text" name="username" id="username" value="{{ old('username') }}" required>
+                <small>Start with a letter. Use letters, numbers, dots, underscores, or hyphens.</small>
             </div>
 
             <div class="field">
@@ -100,12 +101,17 @@
             </div>
 
         <div class="field">
-                <label for="signup_password">Password (minimum 6 characters)</label>
+                <label for="signup_password">Password (at least 8 characters, including letters and numbers)</label>
             <div class="password-wrap">
-                <input type="password" name="password" id="signup_password" required>
+                <input type="password" name="password" id="signup_password" minlength="8" autocomplete="new-password" required>
                 <button type="button" class="toggle-password" data-target="signup_password">Show</button>
             </div>
         </div>
+
+            <div class="field">
+                <label for="signup_password_confirmation">Confirm password</label>
+                <input type="password" name="password_confirmation" id="signup_password_confirmation" minlength="8" autocomplete="new-password" required>
+            </div>
 
             <button type="submit">Sign Up</button>
         </form>

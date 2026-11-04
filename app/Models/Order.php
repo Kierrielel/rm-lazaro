@@ -70,4 +70,14 @@ class Order extends Model
     {
         return $this->balance <= 0;
     }
+
+    /** @return list<string> */
+    public function availableStatuses(): array
+    {
+        return match ($this->order_status) {
+            'pending' => ['pending', 'processing', 'completed', 'cancelled'],
+            'processing' => ['processing', 'completed', 'cancelled'],
+            default => [$this->order_status],
+        };
+    }
 }

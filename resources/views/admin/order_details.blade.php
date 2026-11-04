@@ -108,7 +108,7 @@
 
                 <label for="order_status">Status</label>
                 <select name="order_status" id="order_status">
-                    @foreach (['pending', 'processing', 'completed', 'cancelled'] as $status)
+                    @foreach ($order->availableStatuses() as $status)
                         <option value="{{ $status }}" @selected($order->order_status === $status)>{{ ucfirst($status) }}</option>
                     @endforeach
                 </select>

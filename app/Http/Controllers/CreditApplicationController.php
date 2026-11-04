@@ -81,7 +81,7 @@ class CreditApplicationController extends Controller
             'first_name' => ['required', 'string', 'max:150'],
             'middle_name' => ['nullable', 'string', 'max:150'],
             'last_name' => ['required', 'string', 'max:150'],
-            'phone_number' => ['required', 'string', 'regex:/^09[0-9]{9}$/', 'unique:users,phone_no'],
+            'phone_number' => ['required', 'string', 'regex:/^09[0-9]{9}$/', Rule::unique('users', 'phone_no')->ignore($user)],
             'province' => ['required', 'string', 'max:2000'],
             'city' => ['required', 'string', 'max:2000'],
             'barangay' => ['required', 'string', 'max:2000'],

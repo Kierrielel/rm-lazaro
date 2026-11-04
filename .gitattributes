@@ -12,3 +12,7 @@
 /.github export-ignore
 CHANGELOG.md export-ignore
 .styleci.yml export-ignore
+/.env export-ignore
+/bootstrap/cache/*.php export-ignore
+/.phpunit.result.cache export-ignore
+/.phpunit.cache export-ignore

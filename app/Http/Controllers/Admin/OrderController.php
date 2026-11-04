@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\LiteralSearch;
 use App\Models\Order;
+use App\OrderStatusUpdater;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -38,10 +41,7 @@ class OrderController extends Controller
         if ($search !== '') {
             $query->where(function ($query) use ($search) {
                 $query->whereHas('user', function ($query) use ($search) {
-                    $query->where('username', 'like', "%{$search}%")
-                        ->orWhere('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('phone_no', 'like', "%{$search}%");
+                    LiteralSearch::apply($query, ['username', 'name', 'email', 'phone_no'], $search);
                 });
                 $orderId = ltrim($search, '#');
                 if (ctype_digit($orderId) && strlen($orderId) <= 18) {
@@ -69,20 +69,18 @@ class OrderController extends Controller
         return view('admin.orders', compact('orders', 'search', 'selectedStatus', 'sort', 'sortOptions'));
     }
 
-    public function show(Order $order)
+    public function show(Order $order): View
     {
-        $order->load('items.product', 'user');
         $order->load('items.product', 'user', 'installments.payments');
 
         return view('admin.order_details', compact('order'));
     }
 
-    public function update(Request $request, Order $order)
+    public function update(Request $request, Order $order, OrderStatusUpdater $updater): RedirectResponse
     {
         $data = $request->validate([
             'order_status' => ['required', 'in:pending,processing,completed,cancelled'],
         ]);
-
         if (
             $data['order_status'] === 'cancelled'
             && $order->payment_method === 'paylater'
@@ -93,7 +91,7 @@ class OrderController extends Controller
             ]);
         }
 
-        $order->update($data);
+        $updater->update($order, $data['order_status']);
 
         return back()->with('success', 'Order status updated.');
     }

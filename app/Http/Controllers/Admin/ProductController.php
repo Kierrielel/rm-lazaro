@@ -3,20 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\LiteralSearch;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $query = Product::with('category');
 
+        $request->validate(['search' => ['nullable', 'string', 'max:100']]);
+
         if ($search = $request->get('search')) {
-            $query->where('name', 'like', "%{$search}%");
+            LiteralSearch::apply($query, ['name'], $search);
         }
 
         if ($categoryId = $request->get('category')) {
@@ -29,61 +34,65 @@ class ProductController extends Controller
         return view('admin.inventory', compact('products', 'categories'));
     }
 
-    public function create()
+    public function create(): View
     {
         $categories = Category::orderBy('name')->get();
+
         return view('admin.edit_product', ['product' => null, 'categories' => $categories]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $validated = $this->validateProduct($request);
 
         DB::transaction(function () use ($request, $validated) {
             $attributes = $this->productAttributes($validated, $request);
             $product = Product::create($attributes);
-            $this->syncVariants($product, $attributes['variation_options'], $request->input('variants', []));
+            $this->syncVariants($product, $attributes['variation_options'], $validated['variants'] ?? []);
         });
 
         return redirect()->route('admin.inventory')->with('success', 'Product added.');
     }
 
-    public function edit(Product $product)
+    public function edit(Product $product): View
     {
         $product->load('variants');
         $categories = Category::orderBy('name')->get();
+
         return view('admin.edit_product', compact('product', 'categories'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $product): RedirectResponse
     {
         $validated = $this->validateProduct($request, $product->id);
 
         DB::transaction(function () use ($request, $validated, $product) {
+            $product = Product::query()->lockForUpdate()->findOrFail($product->id);
             $attributes = $this->productAttributes($validated, $request);
             $product->update($attributes);
-            $this->syncVariants($product, $attributes['variation_options'], $request->input('variants', []));
+            $this->syncVariants($product, $attributes['variation_options'], $validated['variants'] ?? []);
         });
 
         return redirect()->route('admin.inventory')->with('success', 'Product updated.');
     }
 
-    public function destroy(Product $product)
+    public function destroy(Product $product): RedirectResponse
     {
         $product->delete();
+
         return redirect()->route('admin.inventory')->with('success', 'Product deleted.');
     }
 
     private function validateProduct(Request $request, ?int $ignoreId = null): array
     {
         return $request->validate([
-            'name' => ['required', 'string', 'max:200', 'unique:products,name' . ($ignoreId ? ",{$ignoreId}" : '')],
+            'name' => ['required', 'string', 'max:200', 'unique:products,name'.($ignoreId ? ",{$ignoreId}" : '')],
             'brand' => ['nullable', 'string', 'max:100'],
             'category_id' => ['required', 'exists:categories,id'],
-            'price' => ['required', 'numeric', 'min:0'],
+            'price' => ['required', 'numeric', 'decimal:0,2', 'min:0', 'max:99999999.99'],
             'stock_quantity' => ['required', 'integer', 'min:0'],
             'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'max:4096'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,gif,bmp', 'extensions:jpg,jpeg,png,webp,gif,bmp', 'max:4096'],
 
             'option_types' => ['nullable', 'array'],
             'option_types.*.name' => ['nullable', 'string', 'max:50'],
@@ -92,8 +101,8 @@ class ProductController extends Controller
             'variants' => ['nullable', 'array'],
             'variants.*.id' => ['nullable', 'integer'],
             'variants.*.options' => ['required', 'json'],
-            'variants.*.price' => ['nullable', 'numeric', 'min:0'],
-            'variants.*.stock_quantity' => ['required', 'numeric', 'min:0'],
+            'variants.*.price' => ['nullable', 'numeric', 'decimal:0,2', 'min:0', 'max:99999999.99'],
+            'variants.*.stock_quantity' => ['required', 'integer', 'min:0'],
         ]);
     }
 
@@ -140,7 +149,7 @@ class ProductController extends Controller
         if ($variationOptions) {
             foreach ($rows as $row) {
                 $options = json_decode($row['options'], true);
-                if (!is_array($options) || !$options) {
+                if (! is_array($options) || ! $options) {
                     continue;
                 }
 
@@ -151,7 +160,7 @@ class ProductController extends Controller
                     'stock_quantity' => $row['stock_quantity'],
                 ];
 
-                $variant = !empty($row['id']) ? $product->variants()->find($row['id']) : null;
+                $variant = ! empty($row['id']) ? $product->variants()->find($row['id']) : null;
 
                 if ($variant) {
                     $variant->update($attributes);
@@ -169,9 +178,9 @@ class ProductController extends Controller
     private function storeImage(Request $request): string
     {
         $file = $request->file('image');
-        $filename = time() . '_' . $file->getClientOriginalName();
+        $filename = $file->hashName();
         $file->move(public_path('product-images'), $filename);
 
-        return 'product-images/' . $filename;
+        return 'product-images/'.$filename;
     }
 }
