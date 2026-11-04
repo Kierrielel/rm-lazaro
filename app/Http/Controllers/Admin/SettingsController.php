@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\StoreSetting;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class SettingsController extends Controller
 
         $data = $request->validateWithBag('account', [
             'name' => ['nullable', 'string', 'max:100'],
-            'username' => ['required', 'string', 'max:50', Rule::unique('users', 'username')->ignore($user)],
+            'username' => ['required', 'string', 'max:50', 'regex:'.User::USERNAME_PATTERN, Rule::unique('users', 'username')->ignore($user)],
             'email' => ['required', 'email', 'max:100', Rule::unique('users', 'email')->ignore($user)],
             'phone_no' => ['required', 'regex:/^09[0-9]{9}$/', Rule::unique('users', 'phone_no')->ignore($user)],
             'current_password' => ['required', 'current_password:web'],

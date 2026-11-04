@@ -13,6 +13,8 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public const USERNAME_PATTERN = '/\A[A-Za-z][A-Za-z0-9_.-]*\z/';
+
     protected $table = 'users';
 
     protected $fillable = [

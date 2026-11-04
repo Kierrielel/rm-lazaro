@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\LiteralSearch;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -28,10 +30,7 @@ class UserController extends Controller
         }
 
         if ($search = $request->get('search')) {
-            $query->where(function ($q) use ($search) {
-                $q->where('username', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            });
+            LiteralSearch::apply($query, ['username', 'email'], $search);
         }
 
         $users = $query->orderBy('username')->paginate(15)->withQueryString();
@@ -51,7 +50,22 @@ class UserController extends Controller
             'barangay' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $user->update($data);
+        DB::transaction(function () use ($request, $user, $data): void {
+            $admins = User::query()->where('role', 'admin')->whereNull('archived_at')
+                ->orderBy('id')->lockForUpdate()->get();
+            abort_unless($admins->contains('id', $request->user()->id), 403);
+            $account = User::query()->lockForUpdate()->findOrFail($user->id);
+            abort_if($account->archived_at !== null, 403, 'Restore this account before editing it.');
+            if ($account->role !== $data['role']) {
+                if ($account->id === $request->user()->id) {
+                    throw ValidationException::withMessages(['role' => 'You cannot change your own role.']);
+                }
+                if ($account->isAdmin() && $admins->count() <= 1) {
+                    throw ValidationException::withMessages(['role' => 'The last active administrator cannot be demoted.']);
+                }
+            }
+            $account->update($data);
+        }, 3);
 
         return back()->with('success', 'User updated.');
     }

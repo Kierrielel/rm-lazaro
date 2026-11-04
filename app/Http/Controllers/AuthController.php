@@ -3,24 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
-    public function showLogin()
+    public function showLogin(): View
     {
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'login_id' => ['required', 'string'],
-            'password' => ['required', 'string'],
+            'login_id' => ['required', 'string', 'max:100'],
+            'password' => ['required', 'string', 'max:255'],
         ]);
 
         $throttleKey = Str::lower($credentials['login_id']).'|'.$request->ip();
@@ -30,18 +33,18 @@ class AuthController extends Controller
 
             return back()->withErrors([
                 'login_id' => "Too many login attempts. Please try again in {$seconds} seconds.",
-            ])->withInput();
+            ])->withInput($request->only('login_id'));
         }
 
-        $user = User::where('username', $credentials['login_id'])
-            ->orWhere('email', $credentials['login_id'])
-            ->orWhere('phone_no', $credentials['login_id'])
-            ->first();
+        $identifier = $credentials['login_id'];
+        $column = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email'
+            : (preg_match('/\A09[0-9]{9}\z/', $identifier) ? 'phone_no' : 'username');
+        $user = User::where($column, $identifier)->first();
 
         if (! $user || $user->archived_at !== null || ! Hash::check($credentials['password'], $user->password)) {
             RateLimiter::hit($throttleKey, 60);
 
-            return back()->withErrors(['login_id' => 'Invalid username/email/phone or password.'])->withInput();
+            return back()->withErrors(['login_id' => 'Invalid username/email/phone or password.'])->withInput($request->only('login_id'));
         }
 
         RateLimiter::clear($throttleKey);
@@ -54,20 +57,21 @@ class AuthController extends Controller
             : redirect()->route('home');
     }
 
-    public function showRegister()
+    public function showRegister(): View
     {
         return view('auth.register');
     }
 
-    public function register(Request $request)
+    public function register(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'username' => ['required', 'string', 'max:50', 'unique:users,username'],
+            'username' => ['required', 'string', 'max:50', 'regex:'.User::USERNAME_PATTERN, 'unique:users,username'],
             'email' => ['required', 'email', 'max:100', 'unique:users,email'],
             'phone_no' => ['required', 'regex:/^09[0-9]{9}$/', 'unique:users,phone_no'],
-            'password' => ['required', 'string', 'min:6'],
+            'password' => ['required', 'string', 'max:255', Password::min(8)->letters()->numbers(), 'confirmed'],
         ], [
             'phone_no.regex' => 'Phone number must start with 09 and be 11 digits long.',
+            'username.regex' => 'Start your username with a letter and use only letters, numbers, dots, underscores, or hyphens.',
         ]);
 
         User::create([
@@ -85,7 +89,7 @@ class AuthController extends Controller
         return redirect()->route('login')->with('success', 'Account created. You can now log in.');
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
         $request->session()->invalidate();

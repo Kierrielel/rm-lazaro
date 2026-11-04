@@ -15,22 +15,26 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
-{
-    User::create([
-        'username' => 'testuser',
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'phone_no' => '09123450000',
-        'password' => Hash::make('changeme123'),
-        'role' => 'customer',
-        'province' => 'Bulacan',
-        'city' => 'San Ildefonso',
-        'unit' => '',
-        'barangay' => '',
-    ]);
+    {
+        if (! app()->environment(['local', 'testing'])) {
+            throw new \RuntimeException('Demo accounts may only be seeded in local or testing environments.');
+        }
 
-    $this->call([
-        RmLazaroSeeder::class,
-    ]);
-}
+        User::create([
+            'username' => 'testuser',
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'phone_no' => '09123450000',
+            'password' => Hash::make('changeme123'),
+            'role' => 'customer',
+            'province' => 'Bulacan',
+            'city' => 'San Ildefonso',
+            'unit' => '',
+            'barangay' => '',
+        ]);
+
+        $this->call([
+            RmLazaroSeeder::class,
+        ]);
+    }
 }

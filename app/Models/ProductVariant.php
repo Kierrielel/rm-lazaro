@@ -10,6 +10,7 @@ class ProductVariant extends Model
 
     protected $casts = [
         'options' => 'array',
+        'price' => 'decimal:2',
     ];
 
     public function product()
@@ -25,7 +26,7 @@ class ProductVariant extends Model
     public function getImageUrlAttribute(): string
     {
         return $this->image_path
-            ? asset('product-images/' . basename($this->image_path))
+            ? asset('product-images/'.basename($this->image_path))
             : $this->product->image_url;
     }
 }

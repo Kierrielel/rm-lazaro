@@ -84,9 +84,9 @@
                             <span>Cash on delivery <small>COD</small></span>
                         </label>
 
-                        <label class="payment-option" for="qrph">
-                            <input type="radio" id="qrph" name="payment_method" value="qrph" required>
-                            <span>QRPh</span>
+                        <label class="payment-option payment-option-disabled" for="qrph">
+                            <input type="radio" id="qrph" name="payment_method" value="qrph" disabled>
+                            <span>QR Ph <small>Unavailable for cart checkout</small></span>
                         </label>
 
                         <label class="payment-option payment-option-disabled" for="gcash">
@@ -111,6 +111,7 @@
                     <div id="paylater-options"
                          hidden
                          data-order-date="{{ now()->toDateString() }}"
+                         data-due-day="{{ auth()->user()->credit_due_day }}"
                          data-principal="{{ number_format($total, 2, '.', '') }}">
 
                         <label for="credit_term_months">Choose an installment term</label>
@@ -199,14 +200,27 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const charge = Math.round(principal * 0.035 * months * 100) / 100;
-        const payable = Math.round((principal + charge) * 100) / 100;
-        const totalCents = Math.round(payable * 100);
+        const principalCents = Math.round(principal * 100);
+        const chargeCents = Math.floor((principalCents * 35 * months + 500) / 1000);
+        const totalCents = principalCents + chargeCents;
+        const charge = chargeCents / 100;
+        const payable = totalCents / 100;
         const baseCents = Math.floor(totalCents / months);
         const extraCents = totalCents % months;
 
         const [year, month, day] = options.dataset.orderDate.split('-').map(Number);
         const startDate = new Date(year, month - 1, day);
+        const dueDay = options.dataset.dueDay;
+        const firstDueDate = dueDay === '15'
+            ? new Date(year, month - 1, 15)
+            : new Date(year, month, 0);
+        if (firstDueDate <= startDate) {
+            if (dueDay === '15') {
+                firstDueDate.setMonth(firstDueDate.getMonth() + 1);
+            } else {
+                firstDueDate.setFullYear(year, month + 1, 0);
+            }
+        }
         const schedule = document.getElementById('credit-installments');
         const dateFormat = new Intl.DateTimeFormat('en-PH', {
             year: 'numeric',
@@ -217,11 +231,11 @@ document.addEventListener('DOMContentLoaded', function () {
         schedule.replaceChildren();
 
         for (let number = 1; number <= months; number++) {
-            const monthIndex = startDate.getMonth() + number;
-            const dueYear = startDate.getFullYear() + Math.floor(monthIndex / 12);
+            const monthIndex = firstDueDate.getMonth() + number - 1;
+            const dueYear = firstDueDate.getFullYear() + Math.floor(monthIndex / 12);
             const dueMonth = monthIndex % 12;
             const lastDay = new Date(dueYear, dueMonth + 1, 0).getDate();
-            const dueDate = new Date(dueYear, dueMonth, Math.min(day, lastDay));
+            const dueDate = new Date(dueYear, dueMonth, dueDay === '15' ? 15 : lastDay);
         
             const cents = baseCents + (number <= extraCents ? 1 : 0);
             const item = document.createElement('li');

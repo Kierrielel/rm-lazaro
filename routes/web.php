@@ -19,9 +19,9 @@ use Illuminate\Support\Facades\Route;
 // ---------------- Guest / auth ----------------
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
     Route::get('/signup', [AuthController::class, 'showRegister'])->name('signup');
-    Route::post('/signup', [AuthController::class, 'register']);
+    Route::post('/signup', [AuthController::class, 'register'])->middleware('throttle:signup');
 });
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:30,1')
         ->name('paylater.payment-attempts.show');
 
-    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->middleware('throttle:checkout')->name('checkout.store');
 });
 
 // ---------------- Admin ----------------

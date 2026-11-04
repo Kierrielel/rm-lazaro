@@ -15,9 +15,13 @@ class RmLazaroSeeder extends Seeder
      */
     public function run(): void
     {
+        if (! app()->environment(['local', 'testing'])) {
+            throw new \RuntimeException('Demo accounts may only be seeded in local or testing environments.');
+        }
+
         $electrical = Category::create(['name' => 'Electrical', 'description' => 'Wires, outlets, switches, and lighting fixtures']);
-        $plumbing   = Category::create(['name' => 'Plumbing', 'description' => 'Pipes, fittings, valves, and plumbing repair supplies']);
-        $tools      = Category::create(['name' => 'Tools', 'description' => 'Tools and equipment for home improvement and repair']);
+        $plumbing = Category::create(['name' => 'Plumbing', 'description' => 'Pipes, fittings, valves, and plumbing repair supplies']);
+        $tools = Category::create(['name' => 'Tools', 'description' => 'Tools and equipment for home improvement and repair']);
 
         User::create([
             'username' => 'admin',
@@ -70,6 +74,6 @@ class RmLazaroSeeder extends Seeder
             ]);
         }
 
-        $tools; // reserved for future tools-category products
+        // reserved for future tools-category products
     }
 }
