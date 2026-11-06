@@ -58,6 +58,7 @@ body.login-page main {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow-y: auto;
     transition: opacity 0.4s ease, visibility 0.4s;
 }
 
@@ -67,8 +68,41 @@ body.login-page main {
 
 .auth-form--signup {
     left: 50%;
+    padding: 18px 40px 14px;
+    justify-content: flex-start;
     opacity: 0;
     visibility: hidden;
+}
+
+.auth-form--signup .auth-logo {
+    margin-bottom: 8px;
+}
+
+.auth-form--signup h2 {
+    font-size: 1.5rem;
+}
+
+.auth-form--signup .auth-subtitle {
+    margin-bottom: 8px;
+}
+
+.auth-form--signup form {
+    gap: 8px;
+}
+
+.auth-form--signup .field label {
+    font-size: 0.8rem;
+    margin-bottom: 2px;
+}
+
+.auth-form--signup .field input {
+    padding: 7px 12px;
+}
+
+.auth-form--signup .field small {
+    display: block;
+    font-size: 0.72rem;
+    line-height: 1.2;
 }
 
 .auth-card.is-signup .auth-form--login {
@@ -162,6 +196,10 @@ body.login-page main {
     font-size: 1rem;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.auth-form--signup button[type="submit"] {
+    padding: 10px;
 }
 
 .auth-form button[type="submit"]:hover {
@@ -396,6 +434,18 @@ body.login-page main {
     justify-content: flex-start;
     text-align: left;
 }
+
+.auth-form--signup .auth-divider {
+    margin: 8px 0 6px;
+}
+
+.auth-form--signup .auth-social {
+    padding: 6px;
+}
+
+.auth-form--signup .auth-switch {
+    margin-top: 8px;
+}
 /*  Phones */
 @media (max-width: 760px) {
     .auth-card {
@@ -409,6 +459,10 @@ body.login-page main {
     .auth-form {
         position: static;
         width: 100%;
+        padding: 35px 25px;
+    }
+
+    .auth-form--signup {
         padding: 35px 25px;
     }
 
