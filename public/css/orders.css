@@ -1,3 +1,4 @@
+
 .orders-page {
     padding: 24px;
     max-width: 1200px;
@@ -12,13 +13,17 @@
     gap: 12px;
     margin-bottom: 20px;
 }
+
 .orders-header h2 {
     margin: 0;
     font-size: 1.6rem;
     color: #111;
 }
 
-.filter-form { margin: 0; }
+.filter-form {
+    margin: 0;
+}
+
 .filter-form select {
     padding: 10px 14px;
     border: 1px solid #ddd;
@@ -29,27 +34,100 @@
     outline: none;
     cursor: pointer;
 }
+
 .filter-form select:focus {
     border-color: #2563eb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
-.orders-page .orders-filter-form { display: flex; flex: 1 1 100%; align-items: flex-end; flex-wrap: wrap; gap: 12px; padding: 16px; background: #fff; border: 1px solid #e1e6ee; border-radius: 12px; }
-.orders-filter-field { display: flex; flex: 1 1 160px; flex-direction: column; gap: 7px; min-width: 0; }
-.orders-search-field { flex: 2 1 280px; }
-.orders-filter-field label { color: #536177; font-size: 0.8rem; font-weight: 600; }
-.orders-filter-field input, .orders-filter-field select { box-sizing: border-box; width: 100%; min-height: 42px; }
-.orders-filter-field input { padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font: inherit; font-size: 0.9rem; }
-.orders-filter-field input:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); }
-.orders-filter-actions { display: flex; gap: 8px; align-items: center; min-height: 42px; }
-.orders-filter-actions .btn { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; }
-.orders-filter-actions .orders-reset { background: #f0f2f5; color: #46556c; text-decoration: none; }
-.orders-result-summary { margin: 0 0 12px; color: #62718a; font-size: 0.85rem; }
+.orders-page .orders-filter-form {
+    display: flex;
+    flex: 1 1 100%;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+    background: #fff;
+    border: 1px solid #e1e6ee;
+    border-radius: 12px;
+}
+
+.orders-filter-field {
+    display: flex;
+    flex: 1 1 160px;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.orders-search-field {
+    flex: 2 1 280px;
+}
+
+.orders-filter-field label {
+    color: #536177;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.orders-filter-field input,
+.orders-filter-field select {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 42px;
+}
+
+.orders-filter-field input {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.9rem;
+}
+
+.orders-filter-field input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.orders-filter-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    min-height: 42px;
+}
+
+.orders-filter-actions .btn {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.orders-filter-actions .orders-reset {
+    background: #f1f1f1;
+    color: #222;
+    text-decoration: none;
+}
+
+.orders-filter-actions .orders-reset:hover {
+    background: #e4e4e4;
+}
+
+.orders-result-summary {
+    margin: 0 0 12px;
+    color: #62718a;
+    font-size: 0.85rem;
+}
 
 .order-table {
     width: 100%;
     border-collapse: collapse;
 }
+
 .order-table th {
     text-align: left;
     padding: 14px 16px;
@@ -60,6 +138,7 @@
     background: #fafafa;
     border-bottom: 1px solid #eee;
 }
+
 .order-table td {
     padding: 14px 16px;
     font-size: 0.9rem;
@@ -67,12 +146,27 @@
     border-bottom: 1px solid #f0f0f0;
     vertical-align: middle;
 }
-.order-table tbody tr:last-child td { border-bottom: none; }
-.order-table tbody tr:hover { background: #fafafa; }
 
-.order-id { font-weight: 700; color: #111; }
-.order-total { font-weight: 600; }
-.order-date { color: #777; }
+.order-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.order-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.order-id {
+    font-weight: 700;
+    color: #111;
+}
+
+.order-total {
+    font-weight: 600;
+}
+
+.order-date {
+    color: #777;
+}
 
 
 .order-status {
@@ -83,39 +177,75 @@
     font-weight: 600;
     white-space: nowrap;
 }
-.order-pending    { background: #fef3c7; color: #b45309; }
-.order-processing { background: #dbeafe; color: #1d4ed8; }
-.order-completed  { background: #dcfce7; color: #15803d; }
-.order-cancelled  { background: #fee2e2; color: #b91c1c; }
 
+.order-pending {
+    background: #fef3c7;
+    color: #b45309;
+}
 
-.btn-blue {
+.order-processing {
     background: #dbeafe;
     color: #1d4ed8;
 }
-.btn-blue:hover {
-    background: #bfdbfe;
+
+.order-completed {
+    background: #dcfce7;
+    color: #15803d;
 }
 
-.order-table .actions-col { text-align: right; }
+.order-cancelled {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+
+.btn-blue {
+    background: #16a34a;
+    color: white;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-blue:hover {
+    background: #15803d;
+}
+
+.order-table .actions-col {
+    text-align: right;
+}
 
 /* Mobile */
 @media (max-width: 768px) {
-    .orders-page { padding: 16px; }
+    .orders-page {
+        padding: 16px;
+    }
 
-    .orders-header { flex-direction: column; align-items: stretch; }
-    .filter-form select { width: 100%; }
+    .orders-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
 
-    .order-table thead { display: none; }
-    .order-table, .order-table tbody, .order-table tr, .order-table td {
+    .filter-form select {
+        width: 100%;
+    }
+
+    .order-table thead {
+        display: none;
+    }
+
+    .order-table,
+    .order-table tbody,
+    .order-table tr,
+    .order-table td {
         display: block;
         width: 100%;
         box-sizing: border-box;
     }
+
     .order-table tr {
         padding: 14px 16px;
         border-bottom: 1px solid #eee;
     }
+
     .order-table td {
         display: flex;
         justify-content: space-between;
@@ -123,11 +253,15 @@
         padding: 6px 0;
         border: none;
     }
+
     .order-table td::before {
         content: attr(data-label);
         font-size: 0.75rem;
         color: #888;
         text-transform: uppercase;
     }
-    .order-table .actions-col { justify-content: flex-end; }
+
+    .order-table .actions-col {
+        justify-content: flex-end;
+    }
 }

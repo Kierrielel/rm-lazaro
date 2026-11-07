@@ -10,10 +10,21 @@
 .finance-date-field input { padding: 10px 12px; min-height: 42px; box-sizing: border-box; width: 100%; border: 1px solid #d5dce6; border-radius: 8px; font: inherit; }
 .finance-date-field input:focus { outline: 2px solid #2459b8; outline-offset: 2px; }
 .finance-filter-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.finance-filter-actions .btn { min-height: 42px; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
-.finance-apply { background: #173d7a; color: white; }
+.finance-filter-actions .btn {
+    min-height: 42px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.finance-apply { background: #16a34a; color: white; }
+.finance-apply:hover { background: #15803d; }
 .finance-export { background: #e7f4ed; color: #11653f; }
-.finance-reset { background: #eff2f6; color: #526077; }
+.finance-export:hover { background: #ccebdc; }
+.finance-reset { background: #f1f1f1; color: #222; }
+.finance-reset:hover { background: #e4e4e4; }
 .finance-period { font-size: 0.85rem; color: #62718a; margin: 0 0 20px; line-height: 1.6; }
 .finance-table tfoot { background: #f1f5fa; }
 

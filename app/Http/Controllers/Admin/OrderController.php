@@ -81,6 +81,15 @@ class OrderController extends Controller
         $data = $request->validate([
             'order_status' => ['required', 'in:pending,processing,completed,cancelled'],
         ]);
+        if (
+            $data['order_status'] === 'cancelled'
+            && $order->payment_method === 'paylater'
+            && $order->payments()->exists()
+        ) {
+            return back()->withErrors([
+                'order_status' => 'This Pay Later order has recorded payments. Refund them before cancelling the order.',
+            ]);
+        }
 
         $updater->update($order, $data['order_status']);
 
