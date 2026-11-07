@@ -1,0 +1,52 @@
+.customer-settings .account-settings-intro {
+    margin: -8px 0 24px;
+    color: #64748b;
+}
+
+.customer-settings .account-settings-help {
+    margin: -4px 0 20px;
+    color: #64748b;
+    font-size: .9rem;
+    line-height: 1.6;
+}
+
+.account-settings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.account-settings-field { min-width: 0; }
+.account-settings-field label { display: block; margin-bottom: 8px; font-size: .9rem; font-weight: 600; }
+.account-settings-field input,
+.account-settings-field select {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background: #fff;
+    color: #26364d;
+    font: inherit;
+    font-size: .9rem;
+}
+
+.account-settings-field input[readonly],
+.account-settings-field select:disabled { background: #f4f7fb; color: #64748b; }
+.account-settings-field small { display: block; margin-top: 7px; color: #64748b; font-size: .8rem; line-height: 1.5; }
+.customer-settings .account-settings-error { margin: 7px 0 0; color: #b42318; font-size: .85rem; }
+.account-settings-full-width { grid-column: 1 / -1; }
+.account-settings-save { margin-top: 24px; padding: 12px 20px; border: 0; border-radius: 8px; background: #193d80; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+.account-settings-save:hover { background: #102d64; }
+.account-settings-address-preview { padding: 16px; margin-bottom: 22px; border: 1px solid #dce6f6; border-radius: 10px; background: #f4f7fd; }
+.account-settings-address-preview strong { color: #193d80; }
+.customer-settings .account-settings-address-preview p { margin: 6px 0 0; color: #526580; font-size: .9rem; }
+.account-settings-field input:focus-visible,
+.account-settings-field select:focus-visible { outline: 3px solid #d1dfff; border-color: #193d80; }
+.customer-settings section[id] { scroll-margin-top: 24px; }
+
+@media (max-width: 700px) {
+    .account-settings-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .account-settings-save { width: 100%; }
+}

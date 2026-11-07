@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountOverviewController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CreditApplicationController as AdminCreditApplicationController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -12,6 +13,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CreditApplicationController;
+use App\Http\Controllers\CustomerOrderController;
+use App\Http\Controllers\CustomerSettingsController;
 use App\Http\Controllers\PayLaterPaymentController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +34,19 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/account/overview', AccountOverviewController::class)->name('customer.accountOverview');
+    Route::get('/account/settings', [CustomerSettingsController::class, 'edit'])->name('customer.settings');
+    Route::put('/account/settings', [CustomerSettingsController::class, 'updateAccount'])
+        ->middleware('throttle:10,1')->name('customer.settings.update');
+    Route::put('/account/settings/address', [CustomerSettingsController::class, 'updateAddress'])
+        ->middleware('throttle:10,1')->name('customer.settings.address');
+    Route::put('/account/settings/password', [CustomerSettingsController::class, 'updatePassword'])
+        ->middleware('throttle:5,1')->name('customer.settings.password');
+    Route::get('/account/orders/{order}', [CustomerOrderController::class, 'show'])
+        ->whereNumber('order')->name('customer.orders.show');
+    Route::patch('/account/orders/{order}/cancel', [CustomerOrderController::class, 'cancel'])
+        ->whereNumber('order')->middleware('throttle:10,1')->name('customer.orders.cancel');
+
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart', [CartController::class, 'add'])->name('cart.add');
     Route::patch('/cart/{cart}', [CartController::class, 'update'])->name('cart.update');

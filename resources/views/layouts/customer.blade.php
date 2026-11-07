@@ -79,7 +79,7 @@
                     </a>
 
                     @auth
-                        <a href="{{ route('home') }}" class="user-login">
+                        <a href="{{ route('customer.accountOverview') }}" class="user-login">
                             <p>{{ auth()->user()->username }}</p>
                         </a>
 

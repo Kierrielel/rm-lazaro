@@ -63,8 +63,7 @@
                     <span class="summary-value">{{ auth()->user()->full_address }}</span>
                     @else
                         <span class="summary-value">
-                            {{-- TODO 3: replace the # with a route() link once the edit page exists --}}
-                            <a href="#">Please add your address first before making an order</a>
+                            <a href="{{ route('customer.settings') }}#billing-address">Please add your address first before making an order</a>
                         </span>
                     @endif
                 </div>

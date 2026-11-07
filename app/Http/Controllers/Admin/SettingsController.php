@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\AccountPassword;
 use App\Http\Controllers\Controller;
 use App\Models\StoreSetting;
 use App\Models\User;
@@ -9,10 +10,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 
 class SettingsController extends Controller
 {
@@ -39,23 +37,9 @@ class SettingsController extends Controller
         return redirect()->route('admin.settings')->with('success', 'Account details updated.');
     }
 
-    public function updatePassword(Request $request): RedirectResponse
+    public function updatePassword(Request $request, AccountPassword $password): RedirectResponse
     {
-        $data = $request->validateWithBag('password', [
-            'current_password' => ['required', 'current_password:web'],
-            'password' => ['required', Password::min(8)->letters()->numbers(), 'confirmed', 'different:current_password'],
-        ]);
-        DB::transaction(function () use ($request, $data) {
-            $user = $request->user();
-            $user->password = Hash::make($data['password']);
-            $user->remember_token = Str::random(60);
-            $user->save();
-            if (config('session.driver') === 'database') {
-                DB::connection(config('session.connection'))->table(config('session.table', 'sessions'))
-                    ->where('user_id', $user->id)->where('id', '!=', $request->session()->getId())->delete();
-            }
-        });
-        $request->session()->regenerate(true);
+        $password->change($request);
 
         return redirect()->route('admin.settings')->with('success', 'Password changed successfully.');
     }

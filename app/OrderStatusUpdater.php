@@ -12,11 +12,14 @@ use Illuminate\Validation\ValidationException;
 
 class OrderStatusUpdater
 {
-    public function update(Order $order, string $status): void
+    public function update(Order $order, string $status, ?string $requiredCurrentStatus = null): void
     {
-        DB::transaction(function () use ($order, $status): void {
+        DB::transaction(function () use ($order, $status, $requiredCurrentStatus): void {
             User::query()->whereKey($order->user_id)->lockForUpdate()->first();
             $locked = Order::query()->lockForUpdate()->findOrFail($order->id);
+            if ($requiredCurrentStatus !== null && $locked->order_status !== $requiredCurrentStatus) {
+                throw ValidationException::withMessages(['order_status' => 'Only pending orders can be cancelled. This order may have already been updated by the store.']);
+            }
             if (! in_array($status, $locked->availableStatuses(), true)) {
                 throw ValidationException::withMessages(['order_status' => 'This order cannot move to the selected status. Cancelled and completed orders are final.']);
             }
@@ -24,11 +27,7 @@ class OrderStatusUpdater
                 return;
             }
             if ($status === 'cancelled') {
-                $openPayment = CreditPaymentAttemptAllocation::query()
-                    ->whereHas('installment', fn ($query) => $query->where('order_id', $locked->id))
-                    ->whereHas('attempt', fn ($query) => $query->whereIn('status', ['creating', 'pending', 'review']))
-                    ->exists();
-                if ($locked->payments()->exists() || $openPayment) {
+                if ($this->hasPaymentsPreventingCancellation($locked)) {
                     throw ValidationException::withMessages(['order_status' => 'This order has a recorded or unresolved payment. Resolve the payment before cancellation.']);
                 }
 
@@ -50,5 +49,13 @@ class OrderStatusUpdater
             }
             $locked->update(['order_status' => $status]);
         }, 3);
+    }
+
+    public function hasPaymentsPreventingCancellation(Order $order): bool
+    {
+        return $order->payments()->exists() || CreditPaymentAttemptAllocation::query()
+            ->whereHas('installment', fn ($query) => $query->where('order_id', $order->id))
+            ->whereHas('attempt', fn ($query) => $query->whereIn('status', ['creating', 'pending', 'review']))
+            ->exists();
     }
 }
