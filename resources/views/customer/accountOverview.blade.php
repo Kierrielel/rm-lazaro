@@ -113,7 +113,7 @@
                             </td>
                             <td>{{ $paymentOptions[$order->payment_method] ?? ucfirst($order->payment_method) }}</td>
                             <td class="account-order-amount">&#8369;{{ number_format((float) $order->total_amount, 2) }}</td>
-                            <td><span class="account-order-status status-{{ $order->order_status }}">{{ ucfirst($order->order_status) }}</span></td>
+                            <td><span class="account-order-status status-{{ $order->order_status }}">{{ $order->status_label }}</span></td>
                         </tr>
                     @empty
                         <tr>

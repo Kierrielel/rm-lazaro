@@ -13,13 +13,13 @@ use Illuminate\Validation\ValidationException;
 
 class Checkout
 {
-    public function place(User $customer, string $paymentMethod, ?int $months = null): ?Order
+    public function place(User $customer, string $paymentMethod, ?int $months = null, ?string $previewMonth = null): ?Order
     {
         if (! in_array($paymentMethod, ['cod', 'paylater'], true)) {
             throw ValidationException::withMessages(['payment_method' => 'This payment method is currently unavailable for cart checkout.']);
         }
 
-        $result = DB::transaction(function () use ($customer, $paymentMethod, $months): Order|ValidationException|null {
+        $result = DB::transaction(function () use ($customer, $paymentMethod, $months, $previewMonth): Order|ValidationException|null {
             $user = User::query()->lockForUpdate()->findOrFail($customer->id);
             abort_if($user->archived_at !== null, 403);
             $items = $user->cart()->orderBy('id')->lockForUpdate()->get();
@@ -61,6 +61,9 @@ class Checkout
             $firstDueDate = null;
             $orderDate = now();
             if ($paymentMethod === 'paylater') {
+                if ($previewMonth !== null && $previewMonth !== $orderDate->format('Y-m')) {
+                    throw ValidationException::withMessages(['credit_schedule_month' => 'The month has changed. Please review the updated installment schedule and confirm your order again.']);
+                }
                 if (! in_array($months, [3, 6, 9, 12], true)) {
                     throw ValidationException::withMessages(['credit_term_months' => 'Choose a supported installment term.']);
                 }
@@ -126,12 +129,9 @@ class Checkout
 
     private function firstDueDate(Carbon $orderDate, string $dueDay): Carbon
     {
-        $date = $orderDate->copy()->startOfDay();
-        if ($dueDay === '15') {
-            return $date->day < 15 ? $date->day(15) : $date->addMonthNoOverflow()->day(15);
-        }
+        $date = $orderDate->copy()->startOfMonth()->addMonth();
 
-        return $date->day < $date->daysInMonth ? $date->endOfMonth() : $date->addMonthNoOverflow()->endOfMonth();
+        return $dueDay === '15' ? $date->day(15) : $date->endOfMonth();
     }
 
     private function amount(int $cents): string

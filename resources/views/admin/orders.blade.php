@@ -23,8 +23,8 @@
                 <label for="order-status">Status</label>
                 <select id="order-status" name="status">
                     <option value="">All statuses</option>
-                    @foreach (['pending', 'processing', 'completed', 'cancelled'] as $status)
-                        <option value="{{ $status }}" @selected($selectedStatus === $status)>{{ ucfirst($status) }}</option>
+                    @foreach (\App\Models\Order::STATUS_LABELS as $status => $label)
+                        <option value="{{ $status }}" @selected($selectedStatus === $status)>{{ $label }}</option>
                     @endforeach
                 </select>
             </div>
@@ -67,7 +67,7 @@
 
                         <td data-label="Status">
                             <span class="order-status order-{{ strtolower($order->order_status) }}">
-                                {{ ucfirst($order->order_status) }}
+                                {{ $order->status_label }}
                             </span>
                         </td>
 

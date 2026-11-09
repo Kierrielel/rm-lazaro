@@ -91,6 +91,57 @@ class PayLaterCheckoutTest extends TestCase
         $this->assertDatabaseHas('credit_payments', ['amount' => 110.50]);
         $this->assertDatabaseHas('credit_payment_attempts', ['id' => $attempt->id, 'paymongo_payment_id' => 'pay_test', 'status' => 'succeeded']);
         $this->assertSame(221.0, $attempt->allocations()->first()->installment->order->balance);
+        $this->assertSame(now()->format('Y-m-d H:i:sP'), $attempt->fresh()->paid_at->format('Y-m-d H:i:sP'));
+        Http::assertSentCount(1);
+    }
+
+    public function test_payment_made_after_due_day_keeps_credit_on_hold_for_remaining_debt(): void
+    {
+        $user = $this->customer();
+        $attempt = $this->attempt($user);
+        $this->travelTo(Carbon::parse('2026-11-02 00:01:00'));
+        Http::fake(['https://api.paymongo.com/v1/checkout_sessions/cs_test' => Http::response($this->checkoutResponse($attempt, true))]);
+
+        $this->actingAs($user)->getJson(route('paylater.payment-attempts.status', $attempt->reference))
+            ->assertExactJson(['status' => 'succeeded']);
+
+        $this->assertTrue($user->fresh()->credit_on_hold);
+        $this->assertSame(221.0, $user->fresh()->unpaidCreditBalance());
+        $this->assertFalse($user->fresh()->canUseCredit(1));
+        Http::assertSentCount(1);
+    }
+
+    public function test_on_time_payment_verified_after_due_day_does_not_create_a_hold(): void
+    {
+        $user = $this->customer();
+        $attempt = $this->attempt($user);
+        $this->travelTo(Carbon::parse('2026-11-02 00:01:00'));
+        $session = $this->checkoutResponse($attempt, true);
+        data_set($session, 'data.attributes.payments.0.attributes.paid_at', Carbon::parse('2026-11-01 23:59:00')->timestamp);
+        Http::fake(['https://api.paymongo.com/v1/checkout_sessions/cs_test' => Http::response($session)]);
+
+        $this->actingAs($user)->getJson(route('paylater.payment-attempts.status', $attempt->reference))
+            ->assertExactJson(['status' => 'succeeded']);
+
+        $this->assertFalse($user->fresh()->credit_on_hold);
+        $this->assertSame('2026-11-01 23:59:00+08:00', $attempt->fresh()->paid_at->format('Y-m-d H:i:sP'));
+        Http::assertSentCount(1);
+    }
+
+    public function test_pay_later_account_page_verifies_on_time_payment_before_checking_overdue_hold(): void
+    {
+        $user = $this->customer();
+        $attempt = $this->attempt($user);
+        $this->travelTo(Carbon::parse('2026-11-02 00:01:00'));
+        $session = $this->checkoutResponse($attempt, true);
+        data_set($session, 'data.attributes.payments.0.attributes.paid_at', Carbon::parse('2026-11-01 23:59:00')->timestamp);
+        Http::fake(['https://api.paymongo.com/v1/checkout_sessions/cs_test' => Http::response($session)]);
+
+        $this->actingAs($user)->get(route('credit.apply'))->assertOk()
+            ->assertViewHas('user', fn ($user) => ! $user->credit_on_hold);
+
+        $this->assertSame('succeeded', $attempt->fresh()->status);
+        $this->assertFalse($user->fresh()->credit_on_hold);
         Http::assertSentCount(1);
     }
 

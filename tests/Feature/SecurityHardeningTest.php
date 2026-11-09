@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\CreditApplication;
 use App\Models\Product;
+use App\Models\StoreSetting;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\RmLazaroSeeder;
@@ -30,6 +31,48 @@ class SecurityHardeningTest extends TestCase
         $this->assertSame('customer', $user->role);
         $this->assertFalse($user->credit_approved);
         $this->assertTrue(Hash::check($payload['password'], $user->password));
+        $this->assertSame('argon2id', password_get_info($user->password)['algoName']);
+    }
+
+    public function test_successful_login_upgrades_a_legacy_bcrypt_password_to_argon2id(): void
+    {
+        $customer = User::factory()->create([
+            'password' => Hash::driver('bcrypt')->make('LegacyPassword123'),
+        ]);
+
+        $this->post('/login', ['login_id' => $customer->username, 'password' => 'LegacyPassword123'])
+            ->assertRedirect(route('home'));
+
+        $this->assertAuthenticatedAs($customer);
+        $this->assertSame('argon2id', password_get_info($customer->fresh()->password)['algoName']);
+        $this->assertTrue(Hash::check('LegacyPassword123', $customer->fresh()->password));
+    }
+
+    public function test_argon2id_signup_preserves_password_characters_after_72_bytes(): void
+    {
+        $password = str_repeat('a', 72).'First123';
+        $payload = array_replace($this->registration(), [
+            'password' => $password,
+            'password_confirmation' => $password,
+        ]);
+
+        $this->post('/signup', $payload)->assertSessionHasNoErrors();
+
+        $hash = User::firstOrFail()->password;
+        $this->assertTrue(Hash::check($password, $hash));
+        $this->assertFalse(Hash::check(str_repeat('a', 72).'Different123', $hash));
+    }
+
+    public function test_incorrect_legacy_password_does_not_login_or_replace_the_hash(): void
+    {
+        $hash = Hash::driver('bcrypt')->make('LegacyPassword123');
+        $customer = User::factory()->create(['password' => $hash]);
+
+        $this->post('/login', ['login_id' => $customer->username, 'password' => 'WrongPassword123'])
+            ->assertSessionHasErrors('login_id');
+
+        $this->assertGuest();
+        $this->assertSame($hash, $customer->fresh()->password);
     }
 
     #[DataProvider('invalidRegistration')]
@@ -245,7 +288,44 @@ class SecurityHardeningTest extends TestCase
         $application = CreditApplication::firstOrFail();
         $this->assertSame($customer->id, $application->user_id);
         $this->assertSame($customer->phone_no, $application->phone_number);
+        $this->assertSame('credit-privacy-v2', $application->privacy_notice_version);
+        $this->assertTrue($application->privacy_notice_accepted_at->isSameSecond(now()));
         Storage::disk('local')->assertExists([$application->id_photo_path, $application->selfie_photo_path]);
+    }
+
+    public function test_application_requires_privacy_consent_before_storing_documents(): void
+    {
+        Storage::fake('local');
+        $customer = User::factory()->create();
+        $payload = $this->applicationPayload($customer->phone_no);
+        unset($payload['accept_credit_privacy']);
+
+        $this->actingAs($customer)->postJson(route('credit.apply.store'), $payload)
+            ->assertUnprocessable()->assertJsonValidationErrors('accept_credit_privacy');
+
+        $this->assertDatabaseCount('credit_applications', 0);
+        $this->assertSame([], Storage::disk('local')->allFiles());
+    }
+
+    public function test_application_shows_completed_privacy_notice_and_configured_contact(): void
+    {
+        StoreSetting::current()->update([
+            'contact_phone' => '0917 111 2222',
+            'contact_email' => 'privacy@example.test',
+            'store_address' => 'Test address <script>alert(1)</script>',
+        ]);
+
+        $this->actingAs(User::factory()->create()->fresh())->get(route('credit.apply'))
+            ->assertOk()
+            ->assertSee('credit-privacy-v2')
+            ->assertSee('privacy@example.test')
+            ->assertSee('0917 111 2222')
+            ->assertSee('Test address <script>alert(1)</script>')
+            ->assertDontSee('Test address <script>alert(1)</script>', false)
+            ->assertSee('no automatic deletion schedule')
+            ->assertSee('Consent and withdrawal')
+            ->assertDontSee('[confirm and state')
+            ->assertDontSee('[insert the actual retention');
     }
 
     public function test_application_rejects_another_users_phone_number(): void

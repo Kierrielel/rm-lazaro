@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StoreSetting;
 use App\PayLaterPayments;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +14,6 @@ class CreditApplicationController extends Controller
     public function create(Request $request, PayLaterPayments $payments)
     {
         $user = $request->user();
-        $user->refreshCreditHold();
 
         $openPaymentAttempt = $user->creditPaymentAttempts()
             ->whereIn('status', ['creating', 'pending', 'review'])
@@ -30,6 +30,7 @@ class CreditApplicationController extends Controller
             }
             $user->refresh();
         }
+        $user->refreshCreditHold();
         $orders = $user->orders()
             ->where('payment_method', 'paylater')
             ->where('order_status', '!=', 'cancelled')
@@ -50,6 +51,7 @@ class CreditApplicationController extends Controller
             'hasCreditAccount' => $hasCreditAccount,
             'availableCredit' => $availableCredit,
             'revokedApplication' => $revokedApplication,
+            'storeSettings' => StoreSetting::current(),
         ]);
     }
 
@@ -81,7 +83,7 @@ class CreditApplicationController extends Controller
             'first_name' => ['required', 'string', 'max:150'],
             'middle_name' => ['nullable', 'string', 'max:150'],
             'last_name' => ['required', 'string', 'max:150'],
-            'phone_number' => ['required', 'string', 'regex:/^09[0-9]{9}$/', Rule::unique('users', 'phone_no')->ignore($user)],
+            'phone_number' => ['required', 'string', 'regex:/^09[0-9]{9}$/', Rule::unique('users', 'phone_no')->ignore($user->id)],
             'province' => ['required', 'string', 'max:2000'],
             'city' => ['required', 'string', 'max:2000'],
             'barangay' => ['required', 'string', 'max:2000'],
@@ -126,8 +128,8 @@ class CreditApplicationController extends Controller
 
         $application->id_photo_path = $idPhotoPath;
         $application->selfie_photo_path = $selfiePhotoPath;
-        $application->terms_version = 'paylater-v2';
-        $application->privacy_notice_version = 'credit-privacy-v1';
+        $application->terms_version = 'paylater-v3';
+        $application->privacy_notice_version = 'credit-privacy-v2';
         $application->privacy_notice_accepted_at = now();
         $application->terms_accepted_at = now();
 

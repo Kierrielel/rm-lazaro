@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    public const STATUS_LABELS = [
+        'pending' => 'Pending',
+        'processing' => 'Processing',
+        'out_for_delivery' => 'Out for delivery',
+        'completed' => 'Completed',
+        'cancelled' => 'Cancelled',
+    ];
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -76,8 +84,14 @@ class Order extends Model
     {
         return match ($this->order_status) {
             'pending' => ['pending', 'processing', 'completed', 'cancelled'],
-            'processing' => ['processing', 'completed', 'cancelled'],
+            'processing' => ['processing', 'out_for_delivery', 'completed', 'cancelled'],
+            'out_for_delivery' => ['out_for_delivery', 'completed'],
             default => [$this->order_status],
         };
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return self::STATUS_LABELS[$this->order_status] ?? ucfirst(str_replace('_', ' ', $this->order_status));
     }
 }

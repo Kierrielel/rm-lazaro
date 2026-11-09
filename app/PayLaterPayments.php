@@ -224,8 +224,12 @@ class PayLaterPayments
                 $entries[] = [$installment, $order, $allocation];
             }
             $paidAt = is_numeric(data_get($payment, 'attributes.paid_at'))
-                ? Carbon::createFromTimestamp((int) data_get($payment, 'attributes.paid_at')) : now();
+                ? Carbon::createFromTimestamp((int) data_get($payment, 'attributes.paid_at'), config('app.timezone')) : now();
             foreach ($entries as [$installment, $order, $allocation]) {
+                if (! $user->credit_on_hold && $installment->due_date->isBefore($paidAt->copy()->startOfDay())) {
+                    $user->credit_on_hold = true;
+                    $user->save();
+                }
                 CreditPayment::create([
                     'order_id' => $order->id, 'credit_installment_id' => $installment->id,
                     'amount' => $allocation->amount_cents / 100, 'paid_at' => $paidAt,

@@ -47,6 +47,21 @@ class AuthController extends Controller
             return back()->withErrors(['login_id' => 'Invalid username/email/phone or password.'])->withInput($request->only('login_id'));
         }
 
+        if (Hash::needsRehash($user->password)) {
+            $passwordHash = Hash::make($credentials['password']);
+            $updated = User::query()->whereKey($user->id)
+                ->where('password', $user->password)
+                ->whereNull('archived_at')
+                ->update(['password' => $passwordHash]);
+
+            if (! $updated) {
+                return back()->withErrors(['login_id' => 'Your account changed. Please log in again.'])
+                    ->withInput($request->only('login_id'));
+            }
+
+            $user->password = $passwordHash;
+        }
+
         RateLimiter::clear($throttleKey);
 
         Auth::login($user);

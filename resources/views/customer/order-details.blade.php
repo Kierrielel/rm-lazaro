@@ -20,14 +20,14 @@
                     <p class="order-details-eyebrow">Order #{{ $order->id }}</p>
                     <h1 id="order-title">{{ $statusDetails['title'] }}</h1>
                 </div>
-                <span class="account-order-status status-{{ $order->order_status }}">{{ ucfirst($order->order_status) }}</span>
+                <span class="account-order-status status-{{ $order->order_status }}">{{ $order->status_label }}</span>
             </div>
             <p>{{ $statusDetails['message'] }}</p>
             <p class="order-details-placed">Placed {{ $order->order_date->format('M j, Y \a\t g:i A') }}</p>
 
             @if ($order->order_status !== 'cancelled')
                 <ol class="order-details-progress" aria-label="Order progress">
-                    @foreach (['Order placed', 'Processing', 'Completed'] as $index => $step)
+                    @foreach (['Order placed', 'Processing', 'Out for delivery', 'Completed'] as $index => $step)
                         <li class="{{ $progressStep >= $index ? 'is-reached' : '' }}"
                             @if ($progressStep === $index) aria-current="step" @endif>
                             <span class="order-details-step-dot" aria-hidden="true"></span>

@@ -168,7 +168,7 @@
                         <td>&#8369;{{ number_format($order->total_amount, 2) }}</td>
                         <td>
                             <span class="status-badge status-{{ strtolower($order->order_status) }}">
-                                {{ ucfirst($order->order_status) }}
+                                {{ $order->status_label }}
                             </span>
                         </td>
                         <td>{{ $order->order_date->format('M d, Y') }}</td>

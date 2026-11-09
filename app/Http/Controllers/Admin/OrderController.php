@@ -25,7 +25,7 @@ class OrderController extends Controller
         ];
         $filters = $request->validate([
             'search' => ['nullable', 'string', 'max:100'],
-            'status' => ['nullable', 'in:pending,processing,completed,cancelled'],
+            'status' => ['nullable', Rule::in(array_keys(Order::STATUS_LABELS))],
             'sort' => ['nullable', Rule::in(array_keys($sortOptions))],
             'page' => ['nullable', 'integer', 'min:1'],
         ]);
@@ -79,18 +79,8 @@ class OrderController extends Controller
     public function update(Request $request, Order $order, OrderStatusUpdater $updater): RedirectResponse
     {
         $data = $request->validate([
-            'order_status' => ['required', 'in:pending,processing,completed,cancelled'],
+            'order_status' => ['required', Rule::in(array_keys(Order::STATUS_LABELS))],
         ]);
-        if (
-            $data['order_status'] === 'cancelled'
-            && $order->payment_method === 'paylater'
-            && $order->payments()->exists()
-        ) {
-            return back()->withErrors([
-                'order_status' => 'This Pay Later order has recorded payments. Refund them before cancelling the order.',
-            ]);
-        }
-
         $updater->update($order, $data['order_status']);
 
         return back()->with('success', 'Order status updated.');

@@ -39,6 +39,7 @@ class CustomerOrderTest extends TestCase
         return [
             'pending' => ['pending', 'Waiting for confirmation', true],
             'processing' => ['processing', 'Your order is being processed', false],
+            'out for delivery' => ['out_for_delivery', 'Your order is out for delivery', false],
             'completed' => ['completed', 'Order completed', false],
             'cancelled' => ['cancelled', 'Order cancelled', false],
         ];
@@ -89,7 +90,7 @@ class CustomerOrderTest extends TestCase
 
     public static function nonPendingStatuses(): array
     {
-        return ['processing' => ['processing'], 'completed' => ['completed'], 'cancelled' => ['cancelled']];
+        return ['processing' => ['processing'], 'out for delivery' => ['out_for_delivery'], 'completed' => ['completed'], 'cancelled' => ['cancelled']];
     }
 
     public function test_order_updated_after_the_customer_opened_the_page_cannot_be_cancelled(): void

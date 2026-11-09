@@ -14,7 +14,7 @@
     <div class="details-header">
         <h2>Order #{{ $order->id }}</h2>
         <span class="order-status order-{{ strtolower($order->order_status) }}">
-            {{ ucfirst($order->order_status) }}
+            {{ $order->status_label }}
         </span>
     </div>
 
@@ -109,7 +109,7 @@
                 <label for="order_status">Status</label>
                 <select name="order_status" id="order_status">
                     @foreach ($order->availableStatuses() as $status)
-                        <option value="{{ $status }}" @selected($order->order_status === $status)>{{ ucfirst($status) }}</option>
+                        <option value="{{ $status }}" @selected($order->order_status === $status)>{{ \App\Models\Order::STATUS_LABELS[$status] }}</option>
                     @endforeach
                 </select>
 

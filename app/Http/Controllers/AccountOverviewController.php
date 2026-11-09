@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -10,12 +11,7 @@ class AccountOverviewController extends Controller
 {
     public function __invoke(Request $request): View
     {
-        $statusOptions = [
-            'pending' => 'Pending',
-            'processing' => 'Processing',
-            'completed' => 'Completed',
-            'cancelled' => 'Cancelled',
-        ];
+        $statusOptions = Order::STATUS_LABELS;
         $paymentOptions = [
             'cod' => 'Cash on delivery',
             'paylater' => 'Pay Later',

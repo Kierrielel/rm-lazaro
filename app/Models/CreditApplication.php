@@ -28,6 +28,7 @@ class CreditApplication extends Model
         'reviewed_at' => 'datetime',
         'revoked_at' => 'datetime',
         'terms_accepted_at' => 'datetime',
+        'privacy_notice_accepted_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

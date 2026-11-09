@@ -168,12 +168,18 @@ class CheckoutIntegrityTest extends TestCase
     public static function schedules(): array
     {
         return [
-            'before fifteenth' => ['2026-01-14 12:00', '15', ['2026-01-15', '2026-02-15', '2026-03-15']],
+            'reported November order' => ['2026-11-09 12:00', '15', ['2026-12-15', '2027-01-15', '2027-02-15']],
+            'Manila month boundary' => ['2026-11-30T16:30:00+00:00', '15', ['2027-01-15', '2027-02-15', '2027-03-15']],
+            'Manila month-end boundary' => ['2026-11-30T16:30:00+00:00', 'last_day', ['2027-01-31', '2027-02-28', '2027-03-31']],
+            'before fifteenth' => ['2026-01-14 12:00', '15', ['2026-02-15', '2026-03-15', '2026-04-15']],
             'on fifteenth' => ['2026-01-15 12:00', '15', ['2026-02-15', '2026-03-15', '2026-04-15']],
-            'before month end' => ['2026-01-30 12:00', 'last_day', ['2026-01-31', '2026-02-28', '2026-03-31']],
+            'after fifteenth' => ['2026-11-16 12:00', '15', ['2026-12-15', '2027-01-15', '2027-02-15']],
+            'before month end' => ['2026-01-30 12:00', 'last_day', ['2026-02-28', '2026-03-31', '2026-04-30']],
+            'start of month' => ['2026-11-01 12:00', 'last_day', ['2026-12-31', '2027-01-31', '2027-02-28']],
             'on month end' => ['2026-01-31 12:00', 'last_day', ['2026-02-28', '2026-03-31', '2026-04-30']],
             'leap year' => ['2028-01-31 12:00', 'last_day', ['2028-02-29', '2028-03-31', '2028-04-30']],
             'year rollover' => ['2026-12-31 12:00', 'last_day', ['2027-01-31', '2027-02-28', '2027-03-31']],
+            'fifteenth year rollover' => ['2026-12-01 12:00', '15', ['2027-01-15', '2027-02-15', '2027-03-15']],
         ];
     }
 
@@ -301,6 +307,34 @@ class CheckoutIntegrityTest extends TestCase
         $this->actingAs($user)->get(route('cart.index'))->assertOk()
             ->assertSee('id="qrph" name="payment_method" value="qrph" disabled', false)
             ->assertSee('data-due-day="last_day"', false);
+    }
+
+    public function test_stale_cart_schedule_requires_confirmation_again_without_creating_an_order(): void
+    {
+        $this->travelTo(Carbon::parse('2026-11-30T16:30:00+00:00'));
+        $user = User::factory()->create(['credit_approved' => true, 'credit_limit' => 1000, 'credit_due_day' => '15']);
+        $product = $this->product(5);
+        $this->cart($user, $product);
+
+        $this->actingAs($user)->post(route('checkout.store'), [
+            'payment_method' => 'paylater', 'credit_term_months' => 3, 'confirm_credit_plan' => 1,
+            'credit_schedule_month' => '2026-11',
+        ])->assertRedirect(route('cart.index'))->assertSessionHasErrors('credit_schedule_month');
+
+        $this->assertDatabaseCount('orders', 0);
+        $this->assertDatabaseCount('credit_installments', 0);
+        $this->assertDatabaseCount('cart', 1);
+        $this->assertSame(5, $product->fresh()->stock_quantity);
+        $this->get(route('cart.index'))->assertOk()
+            ->assertSee('name="credit_schedule_month" value="2026-12"', false)
+            ->assertSee('data-order-date="2026-12-01"', false);
+
+        $this->post(route('checkout.store'), [
+            'payment_method' => 'paylater', 'credit_term_months' => 3, 'confirm_credit_plan' => 1,
+            'credit_schedule_month' => '2026-12',
+        ])->assertSessionHasNoErrors();
+
+        $this->assertSame('2027-01-15', Order::firstOrFail()->due_date->toDateString());
     }
 
     private function product(int $stock, string $price = '100.00'): Product

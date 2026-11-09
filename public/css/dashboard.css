@@ -237,6 +237,11 @@ html body {
     color: #1e40af;
 }
 
+.status-out_for_delivery {
+    background-color: #ede9fe;
+    color: #5b21b6;
+}
+
 
 .dashboard-charts {
     display: grid;

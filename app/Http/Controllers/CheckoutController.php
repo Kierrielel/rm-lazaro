@@ -15,12 +15,18 @@ class CheckoutController extends Controller
             'payment_method' => ['required', 'in:cod,paylater'],
             'credit_term_months' => ['exclude_unless:payment_method,paylater', 'required', 'integer', 'in:3,6,9,12'],
             'confirm_credit_plan' => ['exclude_unless:payment_method,paylater', 'accepted'],
+            'credit_schedule_month' => ['exclude_unless:payment_method,paylater', 'sometimes', 'required', 'date_format:Y-m'],
         ], [
             'payment_method.in' => 'This payment method is currently unavailable for cart checkout.',
         ]);
 
         try {
-            $order = $checkout->place($request->user(), $data['payment_method'], isset($data['credit_term_months']) ? (int) $data['credit_term_months'] : null);
+            $order = $checkout->place(
+                $request->user(),
+                $data['payment_method'],
+                isset($data['credit_term_months']) ? (int) $data['credit_term_months'] : null,
+                $data['credit_schedule_month'] ?? null,
+            );
         } catch (ValidationException $exception) {
             throw $exception->redirectTo(route('cart.index'));
         }

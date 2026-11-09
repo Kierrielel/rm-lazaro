@@ -107,6 +107,7 @@
                     </fieldset>
 
                     @if (auth()->user()->credit_approved)
+                    <input type="hidden" name="credit_schedule_month" value="{{ now()->format('Y-m') }}">
                     <div id="paylater-options"
                          hidden
                          data-order-date="{{ now()->toDateString() }}"
@@ -207,19 +208,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const baseCents = Math.floor(totalCents / months);
         const extraCents = totalCents % months;
 
-        const [year, month, day] = options.dataset.orderDate.split('-').map(Number);
-        const startDate = new Date(year, month - 1, day);
+        const [year, month] = options.dataset.orderDate.split('-').map(Number);
         const dueDay = options.dataset.dueDay;
         const firstDueDate = dueDay === '15'
-            ? new Date(year, month - 1, 15)
-            : new Date(year, month, 0);
-        if (firstDueDate <= startDate) {
-            if (dueDay === '15') {
-                firstDueDate.setMonth(firstDueDate.getMonth() + 1);
-            } else {
-                firstDueDate.setFullYear(year, month + 1, 0);
-            }
-        }
+            ? new Date(year, month, 15)
+            : new Date(year, month + 1, 0);
         const schedule = document.getElementById('credit-installments');
         const dateFormat = new Intl.DateTimeFormat('en-PH', {
             year: 'numeric',

@@ -425,7 +425,9 @@
                                     In the application, you must choose either the 15th or the last
                                     calendar day of each month as your monthly installment due date.
                                     Your selected due date is fixed after you submit the application and
-                                    will be used for your Pay Later installment schedules.
+                                    will be used for your Pay Later installment schedules. The first
+                                    installment is due on your chosen day in the month after your order
+                                    is placed. Later installments follow monthly on that same due-day choice.
                                 </li>
                                 <li>
                                     Approved customers may choose a 3, 6, 9, or 12 month plan when
@@ -485,17 +487,28 @@
                         <div class="accordion-body">
                             <p>
                                 <strong>Who is responsible for your information?</strong>
-                                Rm Lazaro Enterprises is responsible for the personal information
-                                collected for this application. Privacy contact:
-                                <strong>rmlazaroenterprises@gmail.com (4XPH+86P, Magsaysay Rd, San Miguel, Bulacan)</strong>.
+                                Rm Lazaro Enterprises controls the personal information collected
+                                through this application. For privacy questions or requests, contact
+                                the store at <strong>{{ $storeSettings->contact_phone }}</strong>
+                                or visit <strong>{{ $storeSettings->store_address }}</strong>.
+                                @if ($storeSettings->contact_email)
+                                    You may also email <strong>{{ $storeSettings->contact_email }}</strong>.
+                                @endif
+                                Ask for the person responsible for Pay Later privacy requests.
                             </p>
+
+                            <p>Notice version <strong>credit-privacy-v2</strong>. Effective November 9, 2026.</p>
 
                             <p>
                                 <strong>What information is collected?</strong>
-                                This application may collect your name, phone number, address, monthly
-                                income, ID type, government ID image, selfie holding your ID, due-date
-                                choice, application decision, and information needed to manage your
-                                Pay Later account and payments.
+                                We collect the name, phone number, address, ID type, government ID
+                                image, selfie holding your ID, and due-day choice that you submit.
+                                Middle name and monthly income are optional. Your application is
+                                linked to your registered account. We also record review decisions,
+                                credit limits, reasons for rejection or revocation, notice and terms
+                                acceptance, orders, installment schedules, and payment records.
+                                Your uploaded ID may contain sensitive personal information, such as
+                                government-issued identifiers and other details visible in the image.
                             </p>
 
                             <p>
@@ -507,10 +520,25 @@
                             </p>
 
                             <p>
-                                <strong>Lawful basis:</strong>
-                                <strong>[confirm and state the applicable lawful basis for each purpose]</strong>.
-                                Where processing relies on your consent, that consent is requested
-                                separately below.
+                                <strong>Basis for processing</strong>
+                                By selecting the separate consent checkbox below, you authorize us
+                                to review your submitted ID image and selfie, including sensitive
+                                personal information they contain, to verify your identity and assess
+                                this application. We process ordinary application and account details
+                                to take steps you request before entering a Pay Later agreement and
+                                to administer that agreement. We may retain or disclose relevant
+                                records to meet an applicable legal obligation or establish, exercise,
+                                or defend legal claims where permitted by law.
+                            </p>
+
+                            <p>
+                                <strong>How decisions are made</strong>
+                                Authorized administrators review applications and decide approval
+                                and the credit limit. The system automatically calculates installment
+                                amounts, available credit, and eligibility for new Pay Later orders.
+                                An unpaid installment after its due date places credit on hold until
+                                the full outstanding Pay Later balance is paid. You may contact the
+                                store to request review of an incorrect record or account restriction.
                             </p>
 
                             <p>
@@ -520,29 +548,53 @@
                                 or maintain the application may process information for those
                                 services. A payment provider may receive the transaction information
                                 needed to process a payment. Information may also be disclosed when
-                                required by law. Your ID and selfie are for application review and
-                                should not be sent to a payment provider.
+                                required by law. When you choose PayMongo for repayment, transaction
+                                details such as the amount, currency, and payment reference are sent
+                                to PayMongo. ID and selfie uploads are kept for application review
+                                and are not included in the system's PayMongo payment requests.
                             </p>
 
                             <p>
                                 <strong>How is it protected and retained?</strong>
                                 ID and selfie files are kept in private application storage, with access
-                                limited to authorized reviewers. Application and account records are
-                                retained for
-                                <strong>[insert the actual retention period and when it begins]</strong>,
-                                then securely deleted or destroyed when no longer needed, unless a
-                                longer period is required for a stated legal or business purpose.
+                                limited to authenticated administrators. They are served through
+                                access-controlled routes with browser caching disabled. Application
+                                and account records are retained during application review and while
+                                the Pay Later account or an outstanding balance remains active.
+                                After rejection, closure, or full repayment, retention depends on
+                                unresolved disputes, applicable recordkeeping duties, and lawful
+                                claims. Archiving an account retains its records and uploaded files.
+                                This system currently has no automatic deletion schedule. Contact
+                                the store to request an assessment of whether particular records
+                                can be erased or must still be retained, and for how long.
                             </p>
 
                             <p>
                                 <strong>Your rights and questions:</strong>
                                 You may contact us using the privacy contact above to ask about your
-                                information or exercise applicable rights, including access or
-                                correction. You may also raise a concern with the National Privacy
+                                information or exercise applicable rights to be informed, access,
+                                correction, objection, erasure or blocking, and data portability,
+                                subject to applicable conditions. State your account username and
+                                the request you want reviewed. We may ask for proportionate identity
+                                verification before disclosing or changing records. Avoid sending
+                                additional ID images through ordinary messages unless a secure
+                                submission method has been arranged. You may also raise a concern
+                                with the National Privacy
                                 Commission. See its
                                 <a href="https://privacy.gov.ph/data-subject-rights/" target="_blank" rel="noopener noreferrer">
                                     data subject rights information
                                 </a>.
+                            </p>
+
+                            <p>
+                                <strong>Consent and withdrawal</strong>
+                                Applying for Pay Later is optional. Required application information
+                                and identity-review consent are necessary for us to assess your
+                                application. You may decline to submit or contact the store to
+                                withdraw consent. Withdrawal may prevent further assessment or use
+                                of Pay Later and applies to future consent-based processing. It does
+                                not cancel an existing debt or require deletion of records that must
+                                lawfully be retained for another applicable basis.
                             </p>
                         </div>
                     </details>
@@ -554,9 +606,10 @@
                                required
                                @checked(old('accept_credit_privacy'))>
                         <span>
-                            I have read this Privacy Notice. I consent to the stated processing
-                            of my application information, including my ID image and selfie,
-                            where consent is the applicable basis.
+                            I have read Privacy Notice credit-privacy-v2. I consent to Rm Lazaro
+                            Enterprises processing my ID image and selfie, including the sensitive
+                            personal information they contain, to verify my identity and assess
+                            my Pay Later application as described above.
                         </span>
                     </label>
 
